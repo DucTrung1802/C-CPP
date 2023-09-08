@@ -1,0 +1,14 @@
+21:06:34 **** Incremental Build of configuration Debug for project target_001_hello_world ****
+make -j20 all 
+arm-none-eabi-size   target_001_hello_world.elf 
+   text	   data	    bss	    dec	    hex	filename
+   3348	    100	   1900	   5348	   14e4	target_001_hello_world.elf
+Finished building: default.size.stdout
+ 
+21:06:39 **** Incremental Build of configuration Debug for project target_001_hello_world ****
+make -j20 all 
+arm-none-eabi-size   target_001_hello_world.elf 
+   text	   data	    bss	    dec	    hex	filename
+   3348	    100	   1900	   5348	   14e4	target_001_hello_world.elf
+Finished building: default.size.stdout
+ 

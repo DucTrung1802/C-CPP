@@ -16,6 +16,7 @@
  ******************************************************************************
  */
 
+#include <stdio.h>
 #include <stdint.h>
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
@@ -25,6 +26,5 @@
 int main(void) {
 	printf("Hello world!\n");
 	/* Loop forever */
-	for (;;)
-		;
+	for (;;);
 }
