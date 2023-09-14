@@ -25,13 +25,13 @@
 
 int main(void)
 {
-	printf("Size of char data type is %u\n byte(s)", sizeof(char));
-	printf("Size of short data type is %u\n byte(s)", sizeof(short));
-	printf("Size of int data type is %u\n byte(s)", sizeof(int));
-	printf("Size of long data type is %u\n byte(s)", sizeof(long));
-	printf("Size of long long data type is %u\n byte(s)", sizeof(long long));
-	printf("Size of float data type is %u\n byte(s)", sizeof(float));
-	printf("Size of double data type is %u\n byte(s)", sizeof(double));
+	printf("Size of char data type is %u byte(s)\n", sizeof(char));
+	printf("Size of short data type is %u byte(s)\n", sizeof(short));
+	printf("Size of int data type is %u byte(s)\n", sizeof(int));
+	printf("Size of long data type is %u byte(s)\n", sizeof(long));
+	printf("Size of long long data type is %u byte(s)\n", sizeof(long long));
+	printf("Size of float data type is %u byte(s)\n", sizeof(float));
+	printf("Size of double data type is %u byte(s)\n", sizeof(double));
 
     /* Loop forever */
 	for(;;);
