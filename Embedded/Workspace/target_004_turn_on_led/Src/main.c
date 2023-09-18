@@ -31,16 +31,16 @@ int main(void)
 	uint32_t *p_port_d_output_reg = (uint32_t*) 0x40020C14;
 
 	// 1. Enable the clock for GPIOD peripheral in the AHB1ENR
-	*p_clock_control_reg |= 0x08;
+	*p_clock_control_reg |= (1 << 3);
 
 	// 2. Configure the mode of the IO pin as output
 	// a. Clear the 24th and 25th bit position (CLEAR)
-	*p_port_d_mode_reg &= ~(0x03000000);
+	*p_port_d_mode_reg &= ~(3 << 24);
 	// b. Make 24th bit as 1 (SET)
-	*p_port_d_mode_reg |= 0x01000000;
+	*p_port_d_mode_reg |= (1 << 24);
 
 	//3. Set 12th bit of the output data register to make I/O pin-12 as HIGH
-	*p_port_d_output_reg |= 0x1000;
+	*p_port_d_output_reg |= (1 << 12);
 
     /* Loop forever */
 	for(;;);
