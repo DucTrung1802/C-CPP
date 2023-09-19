@@ -771,13 +771,13 @@ LOAD C:/ST/STM32CubeIDE_1.13.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
                                          0x44 (size before relaxing)
  .comment       0x0000000000000043       0x44 ./Src/main.o
 
-.debug_info     0x0000000000000000      0x14d
- .debug_info    0x0000000000000000      0x12a ./Src/main.o
- .debug_info    0x000000000000012a       0x23 ./Startup/startup_stm32f411vetx.o
+.debug_info     0x0000000000000000      0x160
+ .debug_info    0x0000000000000000      0x13d ./Src/main.o
+ .debug_info    0x000000000000013d       0x23 ./Startup/startup_stm32f411vetx.o
 
-.debug_abbrev   0x0000000000000000       0x95
- .debug_abbrev  0x0000000000000000       0x83 ./Src/main.o
- .debug_abbrev  0x0000000000000083       0x12 ./Startup/startup_stm32f411vetx.o
+.debug_abbrev   0x0000000000000000       0x9d
+ .debug_abbrev  0x0000000000000000       0x8b ./Src/main.o
+ .debug_abbrev  0x000000000000008b       0x12 ./Startup/startup_stm32f411vetx.o
 
 .debug_aranges  0x0000000000000000       0x48
  .debug_aranges
@@ -802,9 +802,9 @@ LOAD C:/ST/STM32CubeIDE_1.13.1/STM32CubeIDE/plugins/com.st.stm32cube.ide.mcu.ext
  .debug_macro   0x0000000000000d09       0x6a ./Src/main.o
  .debug_macro   0x0000000000000d73      0x1df ./Src/main.o
 
-.debug_line     0x0000000000000000      0x4a1
- .debug_line    0x0000000000000000      0x426 ./Src/main.o
- .debug_line    0x0000000000000426       0x7b ./Startup/startup_stm32f411vetx.o
+.debug_line     0x0000000000000000      0x4a3
+ .debug_line    0x0000000000000000      0x428 ./Src/main.o
+ .debug_line    0x0000000000000428       0x7b ./Startup/startup_stm32f411vetx.o
 
 .debug_str      0x0000000000000000     0x3bff
  .debug_str     0x0000000000000000     0x3bd0 ./Src/main.o

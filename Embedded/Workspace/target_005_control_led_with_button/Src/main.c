@@ -25,13 +25,13 @@
 int main(void) {
 	// Turn on green LED - PD12
 
-	uint32_t volatile *p_clock_control_reg = (uint32_t*) 0x40023830;
+	uint32_t volatile *const p_clock_control_reg = (uint32_t*) 0x40023830;
 
-	uint32_t volatile *p_port_d_mode_reg = (uint32_t*) 0x40020C00;
-	uint32_t volatile *p_port_d_output_reg = (uint32_t*) 0x40020C14;
+	uint32_t volatile *const p_port_d_mode_reg = (uint32_t*) 0x40020C00;
+	uint32_t volatile *const p_port_d_output_reg = (uint32_t*) 0x40020C14;
 
-	uint32_t volatile *p_port_a_mode_reg = (uint32_t*) 0x40020000;
-	uint32_t volatile *p_port_a_input_reg = (uint32_t*) 0x40020010;
+	uint32_t volatile *const p_port_a_mode_reg = (uint32_t*) 0x40020000;
+	uint32_t const volatile *const p_port_a_input_reg = (uint32_t*) 0x40020010;
 
 	// 1. Enable the clock for GPIOA peripheral in the AHB1ENR
 	*p_clock_control_reg |= (1 << 0);
