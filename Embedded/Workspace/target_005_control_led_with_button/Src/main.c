@@ -25,13 +25,13 @@
 int main(void) {
 	// Turn on green LED - PD12
 
-	uint32_t *p_clock_control_reg = (uint32_t*) 0x40023830;
+	uint32_t volatile *p_clock_control_reg = (uint32_t*) 0x40023830;
 
-	uint32_t *p_port_d_mode_reg = (uint32_t*) 0x40020C00;
-	uint32_t *p_port_d_output_reg = (uint32_t*) 0x40020C14;
+	uint32_t volatile *p_port_d_mode_reg = (uint32_t*) 0x40020C00;
+	uint32_t volatile *p_port_d_output_reg = (uint32_t*) 0x40020C14;
 
-	uint32_t *p_port_a_mode_reg = (uint32_t*) 0x40020000;
-	uint32_t *p_port_a_input_reg = (uint32_t*) 0x40020010;
+	uint32_t volatile *p_port_a_mode_reg = (uint32_t*) 0x40020000;
+	uint32_t volatile *p_port_a_input_reg = (uint32_t*) 0x40020010;
 
 	// 1. Enable the clock for GPIOA peripheral in the AHB1ENR
 	*p_clock_control_reg |= (1 << 0);
@@ -51,7 +51,7 @@ int main(void) {
 
 	/* Loop forever */
 	while (1) {
-		uint8_t pin_status = (uint8_t) (*p_port_a_input_reg & 1);
+		uint8_t volatile pin_status = (uint8_t) (*p_port_a_input_reg & 1);
 		if (pin_status) {
 			//3. Set 12th bit of the output data register to make I/O pin-12 as HIGH
 			*p_port_d_output_reg |= (1 << 12);
