@@ -3,18 +3,19 @@
 #include <stdbool.h>
 
 struct Packet {
-	uint8_t crc;			// 2 bit	LSB
-	uint8_t status;			// 1 bit
-	uint16_t payload;		// 12 bit
-	uint8_t bat;			// 3 bit
-	uint8_t sensor;			// 3 bit
-	uint8_t long_addr;		// 8 bit
-	uint8_t short_addr;		// 2 bit
-	uint8_t addr_mode;		// 1 bit	MSB
+	uint32_t crc		:2;			// 2 bit	LSB
+	uint32_t status		:1;			// 1 bit
+	uint32_t payload	:12;		// 12 bit
+	uint32_t bat		:3;			// 3 bit
+	uint32_t sensor		:3;			// 3 bit
+	uint32_t long_addr	:8;		// 8 bit
+	uint32_t short_addr	:2;		// 2 bit
+	uint32_t addr_mode	:1;		// 1 bit	MSB
 };
 
 void bin(unsigned n);
-void print_packet(struct Packet input_packet);
+void printPacket(struct Packet input_packet);
+void waitForUser();
 
 int main() {
 	uint32_t hex_code;
@@ -36,11 +37,10 @@ int main() {
 	data_packet.short_addr = (hex_code >> 29) & 0x03;
 	data_packet.addr_mode = (hex_code >> 31) & 0x01;
 
-	print_packet(data_packet);
+	printPacket(data_packet);
+	printf("Size of packet: %u\n", sizeof(struct Packet));
 
-	printf("Press any key to continue...");
-	fflush(stdin);
-	getchar();
+	waitForUser();
 	return 0;
 }
 
@@ -51,7 +51,7 @@ void bin(uint32_t n) {
 	printf("\n");
 }
 
-void print_packet(struct Packet input_packet) {
+void printPacket(struct Packet input_packet) {
 	printf("crc:\t\t\t");
 	bin(input_packet.crc);
 	printf("status:\t\t\t");
@@ -68,4 +68,11 @@ void print_packet(struct Packet input_packet) {
 	bin(input_packet.short_addr);
 	printf("addr_mode:\t\t");
 	bin(input_packet.addr_mode);
+}
+
+void waitForUser()
+{
+	printf("\nPress any key to continue...");
+	fflush(stdin);
+	getchar();
 }
