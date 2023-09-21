@@ -17,31 +17,54 @@
  */
 
 #include <stdint.h>
+#include "main.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-typedef struct
-{
-	uint32_t gpio_a_en	:1;
-	uint32_t gpio_b_en	:1;
-	uint32_t gpio_c_en	:1;
-	uint32_t gpio_d_en	:1;
-	uint32_t gpio_e_en	:1;
-	uint32_t reserve_1	:2;
-	uint32_t gpio_h_en	:1;
-	uint32_t reserve_2	:4;
-	uint32_t crc_en		:1;
-	uint32_t reserve_3	:8;
-	uint32_t dma_1_en	:1;
-	uint32_t dma_2_en	:1;
-	uint32_t reserve_4	:9;
-} RCC_AHB1_ENR_t ;
-
-
 int main(void)
 {
-    /* Loop forever */
-	for(;;);
+	RCC_AHB1_ENR_t volatile *const p_clock_control_reg =
+			(RCC_AHB1_ENR_t*) 0x40023830;
+
+	GPIOx_MODE_REG_t volatile *const p_port_d_mode_reg =
+			(GPIOx_MODE_REG_t*) 0x40020C00;
+	GPIOx_ODR_t volatile *const p_port_d_output_reg = (GPIOx_ODR_t*) 0x40020C14;
+
+	GPIOx_MODE_REG_t volatile *const p_port_a_mode_reg =
+			(GPIOx_MODE_REG_t*) 0x40020000;
+	GPIOx_IDR_t const volatile *const p_port_a_input_reg =
+			(GPIOx_IDR_t*) 0x40020010;
+
+	// 1. Enable the clock for GPIOA peripheral in the AHB1ENR
+	p_clock_control_reg->gpio_a_en = 1;
+
+	// 2. Enable the clock for GPIOD peripheral in the AHB1ENR
+	p_clock_control_reg->gpio_d_en = 1;
+
+	// 3. Configure the mode of the button pin A0 as input
+	// a. Clear the 0th and 1st bit position (CLEAR)
+	p_port_a_mode_reg->pin_0 = 0;
+
+	// 4. Configure the mode of the IO pin D12 as output
+	// a. Clear the 24th and 25th bit position (CLEAR)
+	p_port_d_mode_reg->pin_12 = 0;
+	// b. Make 24th bit as 1 (SET)
+	p_port_d_mode_reg->pin_12 = 1;
+
+	/* Loop forever */
+	while (1)
+	{
+		uint8_t volatile pin_status = (uint8_t) (p_port_a_input_reg->pin_0);
+		if (pin_status)
+		{
+			//3. Set 12th bit of the output data register to make I/O pin-12 as HIGH
+			p_port_d_output_reg->pin_12 = 1;
+		}
+		else
+		{
+			p_port_d_output_reg->pin_12 = 0;
+		}
+	}
 }
