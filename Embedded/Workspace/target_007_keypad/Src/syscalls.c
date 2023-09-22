@@ -30,7 +30,6 @@
 #include <sys/time.h>
 #include <sys/times.h>
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 //					Implementation of printf like feature using ARM Cortex M3/M4/ ITM functionality
 //					This function will not work for ARM Cortex M0/M0+
@@ -60,7 +59,6 @@ void ITM_SendChar(uint8_t ch)
 	//Write to ITM stimulus port0
 	ITM_STIMULUS_PORT0 = ch;
 }
-
 
 /* Variables */
 extern int __io_putchar(int ch) __attribute__((weak));
