@@ -7,17 +7,20 @@
 void reChoose(bool const valid);
 void printStudentInfo(STUDENT_LIST_t const student_list);
 bool addStudentRecord();
-void deleteStudentRecord(uint32_t const delete_id);
+int8_t checkExistingId(STUDENT_LIST_t const student_list, uint32_t const id);
+void deleteStudentRecord(STUDENT_LIST_t *student_list, uint32_t const delete_id);
+
+STUDENT_LIST_t student_list;
 
 int main()
 {
 	uint8_t choice = 0;
 	bool valid_choice;
-	STUDENT_LIST_t student_list;
 	student_list.total = 0;
+	uint32_t delete_id;
 	do
 	{
-		printf("===============================\n");
+		printf("\n===============================\n");
 		printf("Student Record Managment System\n");
 		printf("Choose your option\n");
 		printf("1. Display all records\n");
@@ -77,6 +80,15 @@ int main()
 			}
 			break;
 		case 3:
+			printf("Enter the ID of record you want to delete: ");
+			if (!scanf("%u", &delete_id))
+			{
+				reChoose(0);
+				continue;
+			}
+
+			deleteStudentRecord(&student_list, delete_id);
+
 			break;
 		case 4:
 			printf("4\n");
@@ -109,6 +121,7 @@ void printStudentInfo(STUDENT_LIST_t student_list)
 	for (int i = 0; i < student_list.total; i++)
 	{
 		printf("\n");
+		printf("ORDER: #%u\n", (i + 1));
 		printf("ID: %u\n", student_list.student[i].id);
 		printf("Full name: %s\n", student_list.student[i].full_name);
 		printf("DOB: %u/%u%/%u\n", student_list.student[i].dob.day,
@@ -127,6 +140,12 @@ bool addStudentRecord(STUDENT_INFO_t *student)
 	fflush(stdin);
 	if (!scanf("%u", &(student->id)))
 	{
+		return false;
+	}
+
+	if (checkExistingId(student_list, student->id) >= 0)
+	{
+		printf("\nAlready existing this ID!\n");
 		return false;
 	}
 
@@ -175,7 +194,37 @@ bool addStudentRecord(STUDENT_INFO_t *student)
 	return true;
 }
 
-void deleteStudentRecord(uint32_t const delete_id)
+int8_t checkExistingId(STUDENT_LIST_t const student_list, uint32_t const id)
 {
+	for (int i = 0; i < student_list.total; i++)
+	{
+		if (student_list.student[i].id == id)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
 
+void deleteStudentRecord(STUDENT_LIST_t *student_list, uint32_t const delete_id)
+{
+	int8_t position = checkExistingId(*student_list, delete_id);
+	if (position == -1)
+	{
+		printf("There is no ID '%u' in the list!\n", delete_id);
+		return;
+	}
+
+	if (student_list->total > 1)
+	{
+		for (int i = position + 1; i < student_list->total; i++)
+		{
+			student_list->student[i - 1] = student_list->student[i];
+		}
+	}
+
+	student_list->total--;
+
+	printf("Delete record with ID %u successfully!\n", delete_id);
+	printf("Current record in the list: %u\n", student_list->total);
 }
