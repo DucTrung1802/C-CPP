@@ -1,0 +1,10 @@
+../Src/math.c:3:14:internalAdd	1
+../Src/math.c:7:14:internalSubtract	1
+../Src/math.c:11:14:internalMultiply	1
+../Src/math.c:15:14:internalDivide	1
+../Src/math.c:20:30:SVC_Handler	1
+../Src/math.c:28:6:SVC_Handler_C	5
+../Src/math.c:71:7:add	1
+../Src/math.c:79:7:subtract	1
+../Src/math.c:87:7:multiply	1
+../Src/math.c:95:7:divide	1

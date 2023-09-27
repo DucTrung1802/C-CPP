@@ -1,0 +1,10 @@
+../Src/math.c:3:14:internalAdd	16	static
+../Src/math.c:7:14:internalSubtract	16	static
+../Src/math.c:11:14:internalMultiply	16	static
+../Src/math.c:15:14:internalDivide	16	static
+../Src/math.c:20:30:SVC_Handler	0	static,ignoring_inline_asm
+../Src/math.c:28:6:SVC_Handler_C	40	static
+../Src/math.c:71:7:add	24	static,ignoring_inline_asm
+../Src/math.c:79:7:subtract	24	static,ignoring_inline_asm
+../Src/math.c:87:7:multiply	24	static,ignoring_inline_asm
+../Src/math.c:95:7:divide	24	static,ignoring_inline_asm
