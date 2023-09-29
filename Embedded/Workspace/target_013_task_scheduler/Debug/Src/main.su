@@ -6,7 +6,7 @@
 ../Src/main.c:106:6:enableProcessorFaults	16	static
 ../Src/main.c:115:6:initSystickTimer	32	static
 ../Src/main.c:139:29:initSchedulerStack	0	static,ignoring_inline_asm
-../Src/main.c:146:6:initTaskStack	24	static
-../Src/main.c:174:6:switchToPSP	4	static
-../Src/main.c:181:6:getPSPValue	4	static
-../Src/main.c:186:6:SysTick_Handler	4	static
+../Src/main.c:148:6:initTaskStacks	24	static
+../Src/main.c:176:29:switchToPSP	0	static,ignoring_inline_asm
+../Src/main.c:200:10:getPSPValue	4	static
+../Src/main.c:205:6:SysTick_Handler	4	static

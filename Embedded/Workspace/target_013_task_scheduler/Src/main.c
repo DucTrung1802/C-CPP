@@ -30,8 +30,8 @@ __attribute__((naked)) void initSchedulerStack(
 		uint32_t const sched_top_of_stack);
 void initSystickTimer(uint32_t tick_hz);
 void initTaskStacks();
-void switchToPSP();
-void getPSPValue();
+__attribute__((naked)) void switchToPSP();
+uint32_t getPSPValue();
 
 void task1_handler();
 void task2_handler();
@@ -140,6 +140,8 @@ __attribute__((naked)) void initSchedulerStack(
 		uint32_t const sched_top_of_stack)
 {
 	__asm volatile ("MSR MSP,%0"::"r"(sched_top_of_stack):);
+
+	// Return from function call ( main() )
 	__asm volatile ("BX LR");
 }
 
@@ -171,18 +173,31 @@ void initTaskStacks()
 	}
 }
 
-void switchToPSP()
+__attribute__((naked)) void switchToPSP()
 {
 	// 1. Initialize the PSP with task 1 stack start
 
 	// Get the value of PSP of current stack
+
+	// Preserve LR which connects back to main()
+	__asm volatile ("PUSH {LR}");
 	__asm volatile ("BL getPSPValue");
+
+	// Initialize PSP
 	__asm volatile ("MSR PSP,R0");
 
+	// Pops back LR value
+	__asm volatile ("POP {LR}");
+
 	// 2. Change SP to PSP using CONTROL register
+	__asm volatile ("MOV R0,#0x02");
+	__asm volatile ("MSR CONTROL,R0");
+
+	// Return from function call ( main() )
+	__asm volatile ("BX LR");
 }
 
-void getPSPValue()
+uint32_t getPSPValue()
 {
 	return psp_of_tasks[current_task];
 }

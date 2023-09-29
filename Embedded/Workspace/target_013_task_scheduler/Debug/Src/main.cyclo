@@ -6,7 +6,7 @@
 ../Src/main.c:106:6:enableProcessorFaults	1
 ../Src/main.c:115:6:initSystickTimer	1
 ../Src/main.c:139:29:initSchedulerStack	1
-../Src/main.c:146:6:initTaskStack	3
-../Src/main.c:174:6:switchToPSP	1
-../Src/main.c:181:6:getPSPValue	1
-../Src/main.c:186:6:SysTick_Handler	1
+../Src/main.c:148:6:initTaskStacks	3
+../Src/main.c:176:29:switchToPSP	1
+../Src/main.c:200:10:getPSPValue	1
+../Src/main.c:205:6:SysTick_Handler	1
