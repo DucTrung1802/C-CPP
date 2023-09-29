@@ -37,13 +37,24 @@
 #define T4_STACK_START			((SRAM_END) - (SIZE_TASK_STACK) * (3))
 #define SCHED_STACK_START		((SRAM_END) - (SIZE_TASK_STACK) * (4))
 
+#define TICK_HZ 			1000U
+
+#define HSI_CLOCK			16000000U
+#define SYSTICK_TIM_CLK 	HSI_CLOCK
+
+void initSystickTimer(uint32_t tick_hz);
+
 void task1_handler();
 void task2_handler();
 void task3_handler();
 void task4_handler();
 
+uint32_t volatile timer = 0;
+
 int main(void)
 {
+	printf("Hello\n");
+	initSystickTimer(TICK_HZ);
 	/* Loop forever */
 	for (;;)
 		;
@@ -78,5 +89,38 @@ void task4_handler()
 	while (1)
 	{
 		printf("This is task 4\n");
+	}
+}
+
+void initSystickTimer(uint32_t tick_hz)
+{
+	// SysTick Reload Value Register
+	uint32_t volatile *const pSRVR = (uint32_t*) 0xE000E014;
+
+	// SysTick Control and Status Register
+	uint32_t volatile *const pSCSR = (uint32_t*) 0xE000E010;
+
+	uint32_t count_value = (SYSTICK_TIM_CLK / tick_hz) - 1;
+
+	// Clear the value of pSRVR
+	*pSRVR &= ~(0x00FFFFFF);
+
+	// Load the reload value into pSRVR
+	*pSRVR |= count_value;
+
+	// Do some configuration
+	*pSCSR |= (1 << 1);
+	*pSCSR |= (1 << 2);
+
+	// Enable the systick
+	*pSCSR |= (1 << 0);
+}
+
+void SysTick_Handler()
+{
+	timer++;
+	if (timer % 1000)
+	{
+		printf("%u\n", timer);
 	}
 }
