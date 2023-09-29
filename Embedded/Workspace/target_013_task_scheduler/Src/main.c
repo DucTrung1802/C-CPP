@@ -31,6 +31,7 @@ __attribute__((naked)) void initSchedulerStack(
 void initSystickTimer(uint32_t tick_hz);
 void initTaskStacks();
 __attribute__((naked)) void switchToPSP();
+void savePSPValue(uint32_t const stack_addr);
 uint32_t getPSPValue();
 
 void task1_handler();
@@ -197,6 +198,11 @@ __attribute__((naked)) void switchToPSP()
 	__asm volatile ("BX LR");
 }
 
+void savePSPValue(uint32_t const stack_addr)
+{
+	psp_of_tasks[current_task] = stack_addr;
+}
+
 uint32_t getPSPValue()
 {
 	return psp_of_tasks[current_task];
@@ -204,5 +210,26 @@ uint32_t getPSPValue()
 
 void SysTick_Handler()
 {
+	/* Save the context of current task */
 
+	// 1. Get current running task's PSP value
+	__asm volatile ("MRS R0,PSP");
+
+	// 2. Using that PSP value to store SF2 (R4 to R11)
+	// Just like PUSH instruction but CANNOT use PUSH instruction
+	// since this is handler, MSP will be affected.
+	// => Use STORE operation
+	// Use STMDB instruction (Example syntax: "STMDB R1!,{R3-R6,R11,R12}")
+	// "Rn!" symbol is use to load final address to Rn register
+	__asm volatile ("STMDB R0!,{R4-R11}");
+
+	// 3. Save the current value of PSP
+	__asm volatile ("BL savePSPValue");
+
+	/* Retrieve the context of next task */
+
+// 1. Decide the next task to run
+// 2. Get its past PSP value
+// 3. Using that PSP value retrieve SF2 (R4 to R11)
+// 4. Update PSP and exit
 }
