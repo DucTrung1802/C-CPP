@@ -18,43 +18,54 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include "main.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-// Stack memory calculation
-#define SIZE_TASK_STACK			(1024U)
-#define	SIZE_SCHED_STACK 		(1024U)
+void enableProcessorFaults();
 
-#define SRAM_START				(0x20000000U)
-#define SIZE_RAM				((128) * (1024))
-#define SRAM_END				((SRAM_START) + (SIZE_RAM))
-
-#define T1_STACK_START			SRAM_END
-#define T2_STACK_START			((SRAM_END) - (SIZE_TASK_STACK) * (1))
-#define T3_STACK_START			((SRAM_END) - (SIZE_TASK_STACK) * (2))
-#define T4_STACK_START			((SRAM_END) - (SIZE_TASK_STACK) * (3))
-#define SCHED_STACK_START		((SRAM_END) - (SIZE_TASK_STACK) * (4))
-
-#define TICK_HZ 			1000U
-
-#define HSI_CLOCK			16000000U
-#define SYSTICK_TIM_CLK 	HSI_CLOCK
-
+__attribute__((naked)) void initSchedulerStack(
+		uint32_t const sched_top_of_stack);
 void initSystickTimer(uint32_t tick_hz);
+void initTaskStacks();
+void switchToPSP();
+void getPSPValue();
 
 void task1_handler();
 void task2_handler();
 void task3_handler();
 void task4_handler();
 
-uint32_t volatile timer = 0;
+uint32_t psp_of_tasks[MAX_TASKS] =
+{ T1_STACK_START, T2_STACK_START, T3_STACK_START, T4_STACK_START };
+
+uint32_t task_handlers[MAX_TASKS];
+
+uint8_t current_task = 0; // task 1 is running
 
 int main(void)
 {
 	printf("Hello\n");
+
+	enableProcessorFaults();
+
+	initSchedulerStack(SCHED_STACK_START);
+
+	task_handlers[0] = (uint32_t) task1_handler;
+	task_handlers[1] = (uint32_t) task2_handler;
+	task_handlers[2] = (uint32_t) task3_handler;
+	task_handlers[3] = (uint32_t) task4_handler;
+
+	initTaskStacks();
+
 	initSystickTimer(TICK_HZ);
+
+	switchToPSP();
+
+	task1_handler();
+
 	/* Loop forever */
 	for (;;)
 		;
@@ -92,6 +103,15 @@ void task4_handler()
 	}
 }
 
+void enableProcessorFaults()
+{
+	uint32_t *pSHCSR = (uint32_t*) 0xE000ED24;
+
+	*pSHCSR |= (1 << 16); // mem manage
+	*pSHCSR |= (1 << 17); // bus fault
+	*pSHCSR |= (1 << 18); // usage fault
+}
+
 void initSystickTimer(uint32_t tick_hz)
 {
 	// SysTick Reload Value Register
@@ -116,11 +136,58 @@ void initSystickTimer(uint32_t tick_hz)
 	*pSCSR |= (1 << 0);
 }
 
+__attribute__((naked)) void initSchedulerStack(
+		uint32_t const sched_top_of_stack)
+{
+	__asm volatile ("MSR MSP,%0"::"r"(sched_top_of_stack):);
+	__asm volatile ("BX LR");
+}
+
+void initTaskStacks()
+{
+	uint32_t *pPSP;
+
+	for (int i = 0; i < MAX_TASKS; i++)
+	{
+		pPSP = (uint32_t*) psp_of_tasks[i];
+
+		// XPSR
+		pPSP--;
+		*pPSP = DUMMY_XPSR; // 0x01000000 - just turn on T bit
+
+		// PC
+		pPSP--;
+		*pPSP = task_handlers[i];
+
+		// LR
+		pPSP--;
+		*pPSP = 0xFFFFFFFD;
+
+		for (int j = 0; j < 13; j++)
+		{
+			pPSP--;
+			*pPSP = 0;
+		}
+	}
+}
+
+void switchToPSP()
+{
+	// 1. Initialize the PSP with task 1 stack start
+
+	// Get the value of PSP of current stack
+	__asm volatile ("BL getPSPValue");
+	__asm volatile ("MSR PSP,R0");
+
+	// 2. Change SP to PSP using CONTROL register
+}
+
+void getPSPValue()
+{
+	return psp_of_tasks[current_task];
+}
+
 void SysTick_Handler()
 {
-	timer++;
-	if (timer % 1000)
-	{
-		printf("%u\n", timer);
-	}
+
 }
