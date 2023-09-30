@@ -24,16 +24,16 @@
 #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-void enableProcessorFaults();
+void Enable_Processor_Faults();
 
-void initSystickTimer(uint32_t tick_hz);
-__attribute__((naked)) void initSchedulerStack(
+void Init_Systick_Timer(uint32_t tick_hz);
+__attribute__((naked)) void Init_Scheduler_Stack(
 		uint32_t const sched_top_of_stack);
-void initTaskStacks();
-__attribute__((naked)) void switchToPSP();
-void savePSPValue(uint32_t const stack_addr);
-uint32_t getPSPValue();
-void updateNextTask();
+void Init_Task_Stacks();
+__attribute__((naked)) void Switch_To_PSP();
+void Save_PSP_Value(uint32_t const stack_addr);
+uint32_t Get_PSP_Value();
+void Update_Next_Task();
 
 __attribute__((naked)) void SysTick_Handler();
 void MemManage_Handler();
@@ -41,10 +41,10 @@ void BusFault_Handler();
 void UsageFault_Handler();
 void HardFault_Handler();
 
-void task1_handler();
-void task2_handler();
-void task3_handler();
-void task4_handler();
+void Task1_Handler();
+void Task2_Handler();
+void Task3_Handler();
+void Task4_Handler();
 
 uint8_t current_task = 0; // task 1 is running
 
@@ -63,24 +63,24 @@ int main(void)
 {
 	printf("Hello\n");
 
-	enableProcessorFaults();
+	Enable_Processor_Faults();
 
-	initSchedulerStack(SCHED_STACK_START);
+	Init_Scheduler_Stack(SCHED_STACK_START);
 
-	initTaskStacks();
+	Init_Task_Stacks();
 
-	initSystickTimer(TICK_HZ);
+	Init_Systick_Timer(TICK_HZ);
 
-	switchToPSP();
+	Switch_To_PSP();
 
-	task1_handler();
+	Task1_Handler();
 
 	/* Loop forever */
 	for (;;)
 		;
 }
 
-void task1_handler()
+void Task1_Handler()
 {
 	while (1)
 	{
@@ -88,7 +88,7 @@ void task1_handler()
 	}
 }
 
-void task2_handler()
+void Task2_Handler()
 {
 	while (1)
 	{
@@ -96,7 +96,7 @@ void task2_handler()
 	}
 }
 
-void task3_handler()
+void Task3_Handler()
 {
 	while (1)
 	{
@@ -104,7 +104,7 @@ void task3_handler()
 	}
 }
 
-void task4_handler()
+void Task4_Handler()
 {
 	while (1)
 	{
@@ -112,7 +112,7 @@ void task4_handler()
 	}
 }
 
-void enableProcessorFaults()
+void Enable_Processor_Faults()
 {
 	uint32_t *pSHCSR = (uint32_t*) 0xE000ED24;
 
@@ -121,7 +121,7 @@ void enableProcessorFaults()
 	*pSHCSR |= (1 << 18); // usage fault
 }
 
-void initSystickTimer(uint32_t tick_hz)
+void Init_Systick_Timer(uint32_t tick_hz)
 {
 	// SysTick Reload Value Register
 	uint32_t volatile *const pSRVR = (uint32_t*) 0xE000E014;
@@ -145,7 +145,7 @@ void initSystickTimer(uint32_t tick_hz)
 	*pSCSR |= (1 << 0);
 }
 
-__attribute__((naked)) void initSchedulerStack(
+__attribute__((naked)) void Init_Scheduler_Stack(
 		uint32_t const sched_top_of_stack)
 {
 	__asm volatile ("MSR MSP,%0"::"r"(sched_top_of_stack):);
@@ -154,7 +154,7 @@ __attribute__((naked)) void initSchedulerStack(
 	__asm volatile ("BX LR");
 }
 
-void initTaskStacks()
+void Init_Task_Stacks()
 {
 
 	uint32_t *pPSP;
@@ -164,10 +164,10 @@ void initTaskStacks()
 	user_tasks[2].psp_value = T3_STACK_START;
 	user_tasks[3].psp_value = T4_STACK_START;
 
-	user_tasks[0].task_handler = task1_handler;
-	user_tasks[1].task_handler = task2_handler;
-	user_tasks[2].task_handler = task3_handler;
-	user_tasks[3].task_handler = task4_handler;
+	user_tasks[0].task_handler = Task1_Handler;
+	user_tasks[1].task_handler = Task2_Handler;
+	user_tasks[2].task_handler = Task3_Handler;
+	user_tasks[3].task_handler = Task4_Handler;
 
 	for (int i = 0; i < MAX_TASKS; i++)
 	{
@@ -197,7 +197,7 @@ void initTaskStacks()
 	}
 }
 
-__attribute__((naked)) void switchToPSP()
+__attribute__((naked)) void Switch_To_PSP()
 {
 	// 1. Initialize the PSP with task 1 stack start
 
@@ -205,7 +205,7 @@ __attribute__((naked)) void switchToPSP()
 
 	// Preserve LR which connects back to main()
 	__asm volatile ("PUSH {LR}");
-	__asm volatile ("BL getPSPValue");
+	__asm volatile ("BL Get_PSP_Value");
 
 	// Initialize PSP
 	__asm volatile ("MSR PSP,R0");
@@ -221,17 +221,17 @@ __attribute__((naked)) void switchToPSP()
 	__asm volatile ("BX LR");
 }
 
-void savePSPValue(uint32_t const stack_addr)
+void Save_PSP_Value(uint32_t const stack_addr)
 {
 	user_tasks[current_task].psp_value = stack_addr;
 }
 
-uint32_t getPSPValue()
+uint32_t Get_PSP_Value()
 {
 	return user_tasks[current_task].psp_value;
 }
 
-void updateNextTask()
+void Update_Next_Task()
 {
 	current_task++;
 	current_task %= MAX_TASKS;
@@ -256,15 +256,15 @@ __attribute__((naked)) void SysTick_Handler()
 	__asm volatile ("PUSH {LR}");
 
 	// 4. Save the current value of PSP
-	__asm volatile ("BL savePSPValue");
+	__asm volatile ("BL Save_PSP_Value");
 
 	/* Retrieve the context of next task */
 
 	// 1. Decide the next task to run
-	__asm volatile ("BL updateNextTask");
+	__asm volatile ("BL Update_Next_Task");
 
 	// 2. Get its past PSP value
-	__asm volatile ("BL getPSPValue");
+	__asm volatile ("BL Get_PSP_Value");
 	// at this moment, PSP value is in R0 register
 
 	// 3. Using that PSP value retrieve SF2 (R4 to R11)
