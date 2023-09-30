@@ -16,9 +16,9 @@
  ******************************************************************************
  */
 
+#include <main.h>
 #include <stdio.h>
 #include <stdint.h>
-#include "main.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
@@ -26,13 +26,20 @@
 
 void enableProcessorFaults();
 
+void initSystickTimer(uint32_t tick_hz);
 __attribute__((naked)) void initSchedulerStack(
 		uint32_t const sched_top_of_stack);
-void initSystickTimer(uint32_t tick_hz);
 void initTaskStacks();
 __attribute__((naked)) void switchToPSP();
 void savePSPValue(uint32_t const stack_addr);
 uint32_t getPSPValue();
+void updateNextTask();
+
+__attribute__((naked)) void SysTick_Handler();
+void MemManage_Handler();
+void BusFault_Handler();
+void UsageFault_Handler();
+void HardFault_Handler();
 
 void task1_handler();
 void task2_handler();
@@ -171,6 +178,8 @@ void initTaskStacks()
 			pPSP--;
 			*pPSP = 0;
 		}
+
+		psp_of_tasks[i] = (uint32_t) pPSP;
 	}
 }
 
@@ -208,7 +217,13 @@ uint32_t getPSPValue()
 	return psp_of_tasks[current_task];
 }
 
-void SysTick_Handler()
+void updateNextTask()
+{
+	current_task++;
+	current_task %= MAX_TASKS;
+}
+
+__attribute__((naked)) void SysTick_Handler()
 {
 	/* Save the context of current task */
 
@@ -223,13 +238,58 @@ void SysTick_Handler()
 	// "Rn!" symbol is use to load final address to Rn register
 	__asm volatile ("STMDB R0!,{R4-R11}");
 
-	// 3. Save the current value of PSP
+	// 3. PUSH LR
+	__asm volatile ("PUSH {LR}");
+
+	// 4. Save the current value of PSP
 	__asm volatile ("BL savePSPValue");
 
 	/* Retrieve the context of next task */
 
-// 1. Decide the next task to run
-// 2. Get its past PSP value
-// 3. Using that PSP value retrieve SF2 (R4 to R11)
-// 4. Update PSP and exit
+	// 1. Decide the next task to run
+	__asm volatile ("BL updateNextTask");
+
+	// 2. Get its past PSP value
+	__asm volatile ("BL getPSPValue");
+	// at this moment, PSP value is in R0 register
+
+	// 3. Using that PSP value retrieve SF2 (R4 to R11)
+	__asm volatile ("LDMIA R0!,{R4-R11}");
+
+	// 4. Update PSP and exit
+	__asm volatile ("MSR PSP,R0");
+
+	// 5. POP LR
+	__asm volatile ("POP {LR}");
+
+	// 6. Return from function call
+	__asm volatile ("BX LR");
+}
+
+void MemManage_Handler()
+{
+	printf("MemManage_Handler\n");
+	while (1)
+		;
+}
+
+void BusFault_Handler()
+{
+	printf("BusFault_Handler\n");
+	while (1)
+		;
+}
+
+void UsageFault_Handler()
+{
+	printf("UsageFault_Handler\n");
+	while (1)
+		;
+}
+
+void HardFault_Handler()
+{
+	printf("HardFault_Handler\n");
+	while (1)
+		;
 }
