@@ -16,9 +16,10 @@
  ******************************************************************************
  */
 
-#include <main.h>
 #include <stdio.h>
 #include <stdint.h>
+#include "main.h"
+#include "onboard_leds.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
 #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
@@ -71,6 +72,8 @@ int main(void)
 {
 	printf("Hello\n");
 
+	Init_Onboard_LEDs();
+
 	Enable_Processor_Faults();
 
 	Init_Scheduler_Stack(SCHED_STACK_START);
@@ -96,33 +99,53 @@ void Idle_Task()
 
 void Task1_Handler()
 {
+	uint32_t volatile timer = 0;
 	while (1)
 	{
-		printf("This is task 1\n");
+		if (g_tick_count - timer >= 1000)
+		{
+			Green_LED_Toggle();
+			timer = g_tick_count;
+		}
 	}
 }
 
 void Task2_Handler()
 {
+	uint32_t volatile timer = 0;
 	while (1)
 	{
-		printf("This is task 2\n");
+		if (g_tick_count - timer >= 500)
+		{
+			Red_LED_Toggle();
+			timer = g_tick_count;
+		}
 	}
 }
 
 void Task3_Handler()
 {
+	uint32_t volatile timer = 0;
 	while (1)
 	{
-		printf("This is task 3\n");
+		if (g_tick_count - timer >= 250)
+		{
+			Orange_LED_Toggle();
+			timer = g_tick_count;
+		}
 	}
 }
 
 void Task4_Handler()
 {
+	uint32_t volatile timer = 0;
 	while (1)
 	{
-		printf("This is task 4\n");
+		if (g_tick_count - timer >= 125)
+		{
+			Blue_LED_Toggle();
+			timer = g_tick_count;
+		}
 	}
 }
 
