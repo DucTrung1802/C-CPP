@@ -1,0 +1,12 @@
+../Src/onboard_leds.c:7:13:Basic_Init	1
+../Src/onboard_leds.c:12:6:Init_Onboard_LEDs	1
+../Src/onboard_leds.c:20:6:Green_LED_Init	1
+../Src/onboard_leds.c:30:6:Orange_LED_Init	1
+../Src/onboard_leds.c:40:6:Red_LED_Init	1
+../Src/onboard_leds.c:50:6:Blue_LED_Init	1
+../Src/onboard_leds.c:60:6:All_LEDs_On	1
+../Src/onboard_leds.c:68:6:All_LEDs_Off	1
+../Src/onboard_leds.c:73:6:Green_LED_On	1
+../Src/onboard_leds.c:82:6:Red_LED_On	1
+../Src/onboard_leds.c:91:6:Orange_LED_On	1
+../Src/onboard_leds.c:100:6:Blue_LED_On	1
