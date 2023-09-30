@@ -34,19 +34,27 @@ __attribute__((naked)) void Switch_To_PSP();
 void Save_PSP_Value(uint32_t const stack_addr);
 uint32_t Get_PSP_Value();
 void Update_Next_Task();
+void Update_Global_Tick_Count();
+void Unblock_Task();
 
-__attribute__((naked)) void SysTick_Handler();
+void SysTick_Handler();
+__attribute__((naked)) void PendSV_Handler();
 void MemManage_Handler();
 void BusFault_Handler();
 void UsageFault_Handler();
 void HardFault_Handler();
 
+void Idle_Task();
 void Task1_Handler();
 void Task2_Handler();
 void Task3_Handler();
 void Task4_Handler();
 
-uint8_t current_task = 0; // task 1 is running
+void Schedule();
+void Task_Delay(uint32_t tick_count);
+
+uint32_t volatile g_tick_count = 0;
+uint8_t volatile current_task = 1; // task 1 is running (should always start with main task)
 
 // Task Control Block
 typedef struct
@@ -77,6 +85,12 @@ int main(void)
 
 	/* Loop forever */
 	for (;;)
+		;
+}
+
+void Idle_Task()
+{
+	while (1)
 		;
 }
 
@@ -159,19 +173,21 @@ void Init_Task_Stacks()
 
 	uint32_t *pPSP;
 
-	user_tasks[0].psp_value = T1_STACK_START;
-	user_tasks[1].psp_value = T2_STACK_START;
-	user_tasks[2].psp_value = T3_STACK_START;
-	user_tasks[3].psp_value = T4_STACK_START;
+	user_tasks[0].psp_value = IDLE_STACK_START;
+	user_tasks[1].psp_value = T1_STACK_START;
+	user_tasks[2].psp_value = T2_STACK_START;
+	user_tasks[3].psp_value = T3_STACK_START;
+	user_tasks[4].psp_value = T4_STACK_START;
 
-	user_tasks[0].task_handler = Task1_Handler;
-	user_tasks[1].task_handler = Task2_Handler;
-	user_tasks[2].task_handler = Task3_Handler;
-	user_tasks[3].task_handler = Task4_Handler;
+	user_tasks[0].task_handler = Idle_Task;
+	user_tasks[1].task_handler = Task1_Handler;
+	user_tasks[2].task_handler = Task2_Handler;
+	user_tasks[3].task_handler = Task3_Handler;
+	user_tasks[4].task_handler = Task4_Handler;
 
 	for (int i = 0; i < MAX_TASKS; i++)
 	{
-		user_tasks[i].current_state = TASK_RUNNING_STATE;
+		user_tasks[i].current_state = TASK_READY_STATE;
 
 		pPSP = (uint32_t*) user_tasks[i].psp_value;
 
@@ -233,50 +249,115 @@ uint32_t Get_PSP_Value()
 
 void Update_Next_Task()
 {
-	current_task++;
-	current_task %= MAX_TASKS;
+	do
+	{
+		current_task++;
+		current_task %= MAX_TASKS;
+	} while (user_tasks[current_task].current_state == TASK_BLOCKED_STATE
+			|| !current_task);
 }
 
-__attribute__((naked)) void SysTick_Handler()
+void Task_Delay(uint32_t tick_count)
+{
+	// To get rid of race condition, should disable interrupt before execute this function
+	// since thread mode and handler mode both access global variable "user_tasks"
+
+	// Disable all interrupts
+	INTERRUPT_DISABLE();
+
+	if (current_task)
+	{
+		user_tasks[current_task].block_count = g_tick_count + tick_count;
+		user_tasks[current_task].current_state = TASK_BLOCKED_STATE;
+		Schedule();
+	}
+
+	// Enable all interrupts
+	INTERRUPT_ENABLE();
+}
+
+void Schedule()
+{
+	// Pend PendSV
+	uint32_t volatile *const pICSR = (uint32_t*) 0xE000ED04;
+
+	*pICSR |= (1 << 28);
+}
+
+void Update_Global_Tick_Count()
+{
+	g_tick_count++;
+}
+
+void Unblock_Task()
+{
+	for (int i = 0; i < MAX_TASKS; i++)
+	{
+		if (user_tasks[i].current_state != TASK_READY_STATE)
+		{
+			if (user_tasks[i].block_count == g_tick_count)
+			{
+				user_tasks[i].current_state = TASK_READY_STATE;
+			}
+		}
+	}
+}
+
+void SysTick_Handler()
+{
+	uint32_t volatile *const pICSR = (uint32_t*) 0xE000ED04;
+
+	// 1. Update global tick count
+	Update_Global_Tick_Count();
+
+	// 2. Unblock tasks
+	Unblock_Task();
+
+	// 3. Pend PendSV
+	*pICSR |= (1 << 28);
+
+}
+
+__attribute__((naked)) void PendSV_Handler()
 {
 	/* Save the context of current task */
 
-	// 1. Get current running task's PSP value
+// 1. Get current running task's PSP value
 	__asm volatile ("MRS R0,PSP");
 
-	// 2. Using that PSP value to store SF2 (R4 to R11)
-	// Just like PUSH instruction but CANNOT use PUSH instruction
-	// since this is handler, MSP will be affected.
-	// => Use STORE operation
-	// Use STMDB instruction (Example syntax: "STMDB R1!,{R3-R6,R11,R12}")
-	// "Rn!" symbol is use to load final address to Rn register
+// 2. Using that PSP value to store SF2 (R4 to R11)
+// Just like PUSH instruction but CANNOT use PUSH instruction
+// since this is handler, MSP will be affected.
+// => Use STORE operation
+// Use STMDB instruction (Example syntax: "STMDB R1!,{R3-R6,R11,R12}")
+// "Rn!" symbol is use to load final address to Rn register
 	__asm volatile ("STMDB R0!,{R4-R11}");
 
-	// 3. PUSH LR
+// 3. PUSH LR
 	__asm volatile ("PUSH {LR}");
 
-	// 4. Save the current value of PSP
+// 4. Save the current value of PSP
 	__asm volatile ("BL Save_PSP_Value");
 
 	/* Retrieve the context of next task */
 
-	// 1. Decide the next task to run
+// 1. Decide the next task to run
 	__asm volatile ("BL Update_Next_Task");
 
-	// 2. Get its past PSP value
+// 2. Get its past PSP value
 	__asm volatile ("BL Get_PSP_Value");
-	// at this moment, PSP value is in R0 register
+// at this moment, PSP value is in R0 register
 
-	// 3. Using that PSP value retrieve SF2 (R4 to R11)
+// 3. Using that PSP value retrieve SF2 (R4 to R11)
 	__asm volatile ("LDMIA R0!,{R4-R11}");
 
-	// 4. Update PSP and exit
+// 4. Update PSP and exit
 	__asm volatile ("MSR PSP,R0");
 
-	// 5. POP LR
+// 5. POP LR
 	__asm volatile ("POP {LR}");
 
-	// 6. Return from function call
+// 6. Return from function call
 	__asm volatile ("BX LR");
 }
 
