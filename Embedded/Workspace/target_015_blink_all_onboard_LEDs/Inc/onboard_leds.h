@@ -22,6 +22,7 @@ void Blue_LED_Init();
 
 void All_LEDs_On();
 void All_LEDs_Off();
+void All_LEDs_Toggle();
 
 void Green_LED_On();
 void Green_LED_Off();

@@ -67,7 +67,18 @@ void All_LEDs_On()
 
 void All_LEDs_Off()
 {
+	Green_LED_Off();
+	Red_LED_Off();
+	Orange_LED_Off();
+	Blue_LED_Off();
+}
 
+void All_LEDs_Toggle()
+{
+	Green_LED_Toggle();
+	Red_LED_Toggle();
+	Orange_LED_Toggle();
+	Blue_LED_Toggle();
 }
 
 void Green_LED_On()
@@ -76,17 +87,17 @@ void Green_LED_On()
 	*p_port_d_output_reg |= (1 << 12);
 }
 
-void Green_LED_Off();
-void Green_LED_Toggle();
-
-void Red_LED_On()
+void Green_LED_Off()
 {
-	// Set 14th bit of the output data register to make I/O pin-14 as HIGH
-	*p_port_d_output_reg |= (1 << 14);
+	// Clear 12th bit of the output data register to make I/O pin-12 as LOW
+	*p_port_d_output_reg &= ~(1 << 12);
 }
 
-void Red_LED_Off();
-void Red_LED_Toggle();
+void Green_LED_Toggle()
+{
+	// XOR 12th bit of the output data register to make I/O pin-12 with 1
+	*p_port_d_output_reg ^= (1 << 12);
+}
 
 void Orange_LED_On()
 {
@@ -94,8 +105,35 @@ void Orange_LED_On()
 	*p_port_d_output_reg |= (1 << 13);
 }
 
-void Orange_LED_Off();
-void Orange_LED_Toggle();
+void Orange_LED_Off()
+{
+	// Clear 13th bit of the output data register to make I/O pin-13 as LOW
+	*p_port_d_output_reg &= ~(1 << 13);
+}
+
+void Orange_LED_Toggle()
+{
+	// XOR 13th bit of the output data register to make I/O pin-13 with 1
+	*p_port_d_output_reg ^= (1 << 13);
+}
+
+void Red_LED_On()
+{
+	// Set 14th bit of the output data register to make I/O pin-14 as HIGH
+	*p_port_d_output_reg |= (1 << 14);
+}
+
+void Red_LED_Off()
+{
+	// Clear 14th bit of the output data register to make I/O pin-14 as LOW
+	*p_port_d_output_reg &= ~(1 << 14);
+}
+
+void Red_LED_Toggle()
+{
+	// XOR 14th bit of the output data register to make I/O pin-14 with 1
+	*p_port_d_output_reg ^= (1 << 14);
+}
 
 void Blue_LED_On()
 {
@@ -103,6 +141,15 @@ void Blue_LED_On()
 	*p_port_d_output_reg |= (1 << 15);
 }
 
-void Blue_LED_Off();
-void Blue_LED_Toggle();
+void Blue_LED_Off()
+{
+	// Clear 15th bit of the output data register to make I/O pin-15 as LOW
+	*p_port_d_output_reg &= ~(1 << 15);
+}
+
+void Blue_LED_Toggle()
+{
+	// XOR 15th bit of the output data register to make I/O pin-15 with 1
+	*p_port_d_output_reg ^= (1 << 15);
+}
 

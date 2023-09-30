@@ -23,11 +23,54 @@
 #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+#define HSI_CLOCK			16000000U
+#define SYSTICK_TIM_CLK 	HSI_CLOCK
+
+void Init_Systick_Timer(uint32_t tick_hz);
+
+uint32_t volatile system_tick = 0;
+uint32_t volatile timer_1 = 0;
+
 int main(void)
 {
 	Init_Onboard_LEDs();
-	All_LEDs_On();
+	Init_Systick_Timer(1000);		// 1000 Hz
 	/* Loop forever */
 	for (;;)
-		;
+	{
+		if (system_tick - timer_1 >= 1000)
+		{
+			All_LEDs_Toggle();
+			timer_1 = system_tick;
+		}
+	}
+}
+
+void Init_Systick_Timer(uint32_t tick_hz)
+{
+// SysTick Reload Value Register
+	uint32_t volatile *const pSRVR = (uint32_t*) 0xE000E014;
+
+// SysTick Control and Status Register
+	uint32_t volatile *const pSCSR = (uint32_t*) 0xE000E010;
+
+	uint32_t count_value = (SYSTICK_TIM_CLK / tick_hz) - 1;
+
+// Clear the value of pSRVR
+	*pSRVR &= ~(0x00FFFFFF);
+
+// Load the reload value into pSRVR
+	*pSRVR |= count_value;
+
+// Do some configuration
+	*pSCSR |= (1 << 1);
+	*pSCSR |= (1 << 2);
+
+// Enable the systick
+	*pSCSR |= (1 << 0);
+}
+
+void SysTick_Handler()
+{
+	system_tick++;
 }
