@@ -2,7 +2,7 @@
 #define MAIN_H_
 
 // Setting
-#define MAX_TASKS 4U
+#define MAX_TASKS 5U// 4 main tasks + idle task
 
 // Stack memory calculation
 #define SIZE_TASK_STACK			(1024U)
@@ -16,7 +16,8 @@
 #define T2_STACK_START			((SRAM_END) - (SIZE_TASK_STACK) * (1))
 #define T3_STACK_START			((SRAM_END) - (SIZE_TASK_STACK) * (2))
 #define T4_STACK_START			((SRAM_END) - (SIZE_TASK_STACK) * (3))
-#define SCHED_STACK_START		((SRAM_END) - (SIZE_TASK_STACK) * (4))
+#define IDLE_STACK_START		((SRAM_END) - (SIZE_TASK_STACK) * (4))
+#define SCHED_STACK_START		((SRAM_END) - (SIZE_TASK_STACK) * (5))
 
 #define TICK_HZ 			1000U
 
@@ -24,5 +25,11 @@
 #define SYSTICK_TIM_CLK 	HSI_CLOCK
 
 #define DUMMY_XPSR 0x01000000U
+
+#define TASK_READY_STATE 0x00
+#define TASK_BLOCKED_STATE 0xFF
+
+#define INTERRUPT_DISABLE() 	do {__asm volatile ("MOV R0,#0x01"); __asm volatile ("MSR PRIMASK,R0");} while (0)
+#define INTERRUPT_ENABLE() 		do {__asm volatile ("MOV R0,#0x00"); __asm volatile ("MSR PRIMASK,R0");} while (0)
 
 #endif /* MAIN_H_ */
