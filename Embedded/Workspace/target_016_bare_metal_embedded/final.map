@@ -1,0 +1,193 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x08000000         0x00080000         xr
+SRAM             0x20000000         0x00020000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD main.o
+LOAD stm32_startup.o
+LOAD onboard_leds.o
+
+.text           0x08000000      0x88c
+ *(.isr_vector)
+ .isr_vector    0x08000000      0x124 stm32_startup.o
+                0x08000000                vectors
+ *(.text)
+ .text          0x08000124      0x4dc main.o
+                0x08000124                main
+                0x08000154                Idle_Task
+                0x0800015c                Task1_Handler
+                0x08000184                Task2_Handler
+                0x080001ac                Task3_Handler
+                0x080001d4                Task4_Handler
+                0x080001fc                Enable_Processor_Faults
+                0x08000238                Init_Systick_Timer
+                0x080002a8                Init_Scheduler_Stack
+                0x080002b2                Init_Task_Stacks
+                0x080003b8                Switch_To_PSP
+                0x080003d2                Save_PSP_Value
+                0x080003fc                Get_PSP_Value
+                0x08000420                Update_Next_Task
+                0x08000484                Task_Delay
+                0x080004ec                Schedule
+                0x08000510                Update_Global_Tick_Count
+                0x0800052c                Unblock_Task
+                0x0800058c                SysTick_Handler
+                0x080005b8                PendSV_Handler
+                0x080005de                MemManage_Handler
+                0x080005e6                BusFault_Handler
+                0x080005ee                UsageFault_Handler
+                0x080005f6                HardFault_Handler
+ .text          0x08000600       0x14 stm32_startup.o
+                0x08000600                RTC_Alarm_IRQHandler
+                0x08000600                EXTI2_IRQHandler
+                0x08000600                DebugMon_Handler
+                0x08000600                SPI4_IRQHandler
+                0x08000600                TIM1_CC_IRQHandler
+                0x08000600                Systick_Handler
+                0x08000600                DMA2_Stream5_IRQHandler
+                0x08000600                DMA1_Stream5_IRQHandler
+                0x08000600                PVD_IRQHandler
+                0x08000600                SDIO_IRQHandler
+                0x08000600                TAMP_STAMP_IRQHandler
+                0x08000600                NMI_Handler
+                0x08000600                EXTI3_IRQHandler
+                0x08000600                TIM1_UP_TIM10_IRQHandler
+                0x08000600                I2C3_ER_IRQHandler
+                0x08000600                EXTI0_IRQHandler
+                0x08000600                I2C2_EV_IRQHandler
+                0x08000600                DMA1_Stream2_IRQHandler
+                0x08000600                FPU_IRQHandler
+                0x08000600                DMA2_Stream2_IRQHandler
+                0x08000600                SPI1_IRQHandler
+                0x08000600                TIM1_BRK_TIM9_IRQHandler
+                0x08000600                DMA2_Stream3_IRQHandler
+                0x08000600                USART6_IRQHandler
+                0x08000600                DMA2_Stream6_IRQHandler
+                0x08000600                DMA2_Stream0_IRQHandler
+                0x08000600                TIM4_IRQHandler
+                0x08000600                I2C1_EV_IRQHandler
+                0x08000600                DMA1_Stream6_IRQHandler
+                0x08000600                DMA1_Stream1_IRQHandler
+                0x08000600                TIM3_IRQHandler
+                0x08000600                RCC_IRQHandler
+                0x08000600                Default_Handler
+                0x08000600                EXTI15_10_IRQHandler
+                0x08000600                ADC_IRQHandler
+                0x08000600                DMA1_Stream7_IRQHandler
+                0x08000600                SPI5_IRQHandler
+                0x08000600                TIM5_IRQHandler
+                0x08000600                DMA2_Stream7_IRQHandler
+                0x08000600                I2C3_EV_IRQHandler
+                0x08000600                EXTI9_5_IRQHandler
+                0x08000600                RTC_WKUP_IRQHandler
+                0x08000600                SPI2_IRQHandler
+                0x08000600                DMA1_Stream0_IRQHandler
+                0x08000600                SVC_Handler
+                0x08000600                EXTI4_IRQHandler
+                0x08000600                WWDG_IRQHandler
+                0x08000600                TIM2_IRQHandler
+                0x08000600                OTG_FS_WKUP_IRQHandler
+                0x08000600                TIM1_TRG_COM_TIM11_IRQHandler
+                0x08000600                EXTI1_IRQHandler
+                0x08000600                USART2_IRQHandler
+                0x08000600                I2C2_ER_IRQHandler
+                0x08000600                DMA2_Stream1_IRQHandler
+                0x08000600                FLASH_IRQHandler
+                0x08000600                DMA2_Stream4_IRQHandler
+                0x08000600                USART1_IRQHandler
+                0x08000600                OTG_FS_IRQHandler
+                0x08000600                SPI3_IRQHandler
+                0x08000600                DMA1_Stream4_IRQHandler
+                0x08000600                I2C1_ER_IRQHandler
+                0x08000600                DMA1_Stream3_IRQHandler
+                0x08000608                Reset_Handler
+ .text          0x08000614      0x26c onboard_leds.o
+                0x08000630                Init_Onboard_LEDs
+                0x08000648                Green_LED_Init
+                0x08000670                Orange_LED_Init
+                0x08000698                Red_LED_Init
+                0x080006c0                Blue_LED_Init
+                0x080006e8                All_LEDs_On
+                0x08000700                All_LEDs_Off
+                0x08000718                All_LEDs_Toggle
+                0x08000730                Green_LED_On
+                0x0800074c                Green_LED_Off
+                0x08000768                Green_LED_Toggle
+                0x08000784                Orange_LED_On
+                0x080007a0                Orange_LED_Off
+                0x080007bc                Orange_LED_Toggle
+                0x080007d8                Red_LED_On
+                0x080007f4                Red_LED_Off
+                0x08000810                Red_LED_Toggle
+                0x0800082c                Blue_LED_On
+                0x08000848                Blue_LED_Off
+                0x08000864                Blue_LED_Toggle
+ *(.rodata)
+ .rodata        0x08000880        0xc onboard_leds.o
+                0x0800088c                        . = ALIGN (0x4)
+                0x0800088c                        end_of_text = .
+
+.glue_7         0x0800088c        0x0
+ .glue_7        0x0800088c        0x0 linker stubs
+
+.glue_7t        0x0800088c        0x0
+ .glue_7t       0x0800088c        0x0 linker stubs
+
+.vfp11_veneer   0x0800088c        0x0
+ .vfp11_veneer  0x0800088c        0x0 linker stubs
+
+.v4_bx          0x0800088c        0x0
+ .v4_bx         0x0800088c        0x0 linker stubs
+
+.iplt           0x0800088c        0x0
+ .iplt          0x0800088c        0x0 main.o
+
+.rel.dyn        0x0800088c        0x0
+ .rel.iplt      0x0800088c        0x0 main.o
+
+.data           0x20000000        0x4 load address 0x0800088c
+                0x20000000                        start_of_data = .
+ *(.data)
+ .data          0x20000000        0x1 main.o
+                0x20000000                current_task
+ .data          0x20000001        0x0 stm32_startup.o
+ .data          0x20000001        0x0 onboard_leds.o
+                0x20000004                        . = ALIGN (0x4)
+ *fill*         0x20000001        0x3 
+                0x20000004                        end_of_data = .
+
+.igot.plt       0x20000004        0x0 load address 0x08000890
+ .igot.plt      0x20000004        0x0 main.o
+
+.bss            0x20000004       0x54 load address 0x08000890
+                0x20000004                        start_of_bss = .
+ *(.bss)
+ .bss           0x20000004       0x54 main.o
+                0x20000004                g_tick_count
+                0x20000008                user_tasks
+ .bss           0x20000058        0x0 stm32_startup.o
+ .bss           0x20000058        0x0 onboard_leds.o
+                0x20000058                        . = ALIGN (0x4)
+                0x20000058                        end_of_bss = .
+OUTPUT(final.elf elf32-littlearm)
+LOAD linker stubs
+
+.comment        0x00000000       0x45
+ .comment       0x00000000       0x45 main.o
+                                 0x46 (size before relaxing)
+ .comment       0x00000045       0x46 stm32_startup.o
+ .comment       0x00000045       0x46 onboard_leds.o
+
+.ARM.attributes
+                0x00000000       0x2e
+ .ARM.attributes
+                0x00000000       0x2e main.o
+ .ARM.attributes
+                0x0000002e       0x2e stm32_startup.o
+ .ARM.attributes
+                0x0000005c       0x2e onboard_leds.o
