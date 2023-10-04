@@ -25,6 +25,7 @@
 #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+// Semihosting function prototype
 extern void initialise_monitor_handles(void);
 
 void Enable_Processor_Faults();
@@ -108,6 +109,7 @@ void Task1_Handler()
 	{
 		if (g_tick_count - timer >= 1000)
 		{
+			printf("Task_1\n");
 			Green_LED_Toggle();
 			timer = g_tick_count;
 		}
@@ -121,6 +123,7 @@ void Task2_Handler()
 	{
 		if (g_tick_count - timer >= 500)
 		{
+			printf("Task_2\n");
 			Red_LED_Toggle();
 			timer = g_tick_count;
 		}
@@ -134,6 +137,7 @@ void Task3_Handler()
 	{
 		if (g_tick_count - timer >= 250)
 		{
+			printf("Task_3\n");
 			Orange_LED_Toggle();
 			timer = g_tick_count;
 		}
@@ -147,6 +151,7 @@ void Task4_Handler()
 	{
 		if (g_tick_count - timer >= 125)
 		{
+			printf("Task_4\n");
 			Blue_LED_Toggle();
 			timer = g_tick_count;
 		}

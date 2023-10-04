@@ -1,7 +1,7 @@
 CC=arm-none-eabi-gcc
 MACHINE=cortex-m4
 CFLAGS= -c -mcpu=$(MACHINE) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0
-LDFLAGS_SH= -mcpu=$(MACHINE) -mthumb -mfloat-abi=soft --specs=rdimon.specs -T stm32_ls.ld -Wl,-Map=final.map
+LDFLAGS_SH= -mcpu=$(MACHINE) -mthumb -mfloat-abi=soft --specs=rdimon.specs -lc -lrdimon -T stm32_ls.ld -Wl,-Map=final.map
 
 
 SRC_FILES=$(wildcard *.c)
