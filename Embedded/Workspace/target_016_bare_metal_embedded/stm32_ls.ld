@@ -41,5 +41,6 @@ SECTIONS
 		__bss_end__ = end_of_bss;
 		. = ALIGN(4);
 		end = .;
+		__end__ = .;
 	}> SRAM
 }

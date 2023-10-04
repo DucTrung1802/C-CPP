@@ -25,11 +25,13 @@
 #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
+extern void initialise_monitor_handles(void);
+
 void Enable_Processor_Faults();
 
 void Init_Systick_Timer(uint32_t tick_hz);
 __attribute__((naked)) void Init_Scheduler_Stack(
-		uint32_t const sched_top_of_stack);
+	uint32_t const sched_top_of_stack);
 void Init_Task_Stacks();
 __attribute__((naked)) void Switch_To_PSP();
 void Save_PSP_Value(uint32_t const stack_addr);
@@ -70,11 +72,13 @@ TCB_t user_tasks[MAX_TASKS];
 
 int main(void)
 {
+	Enable_Processor_Faults();
+
+	initialise_monitor_handles();
+
 	printf("Hello\n");
 
 	Init_Onboard_LEDs();
-
-	Enable_Processor_Faults();
 
 	Init_Scheduler_Stack(SCHED_STACK_START);
 
@@ -151,7 +155,7 @@ void Task4_Handler()
 
 void Enable_Processor_Faults()
 {
-	uint32_t *pSHCSR = (uint32_t*) 0xE000ED24;
+	uint32_t *pSHCSR = (uint32_t *)0xE000ED24;
 
 	*pSHCSR |= (1 << 16); // mem manage
 	*pSHCSR |= (1 << 17); // bus fault
@@ -161,10 +165,10 @@ void Enable_Processor_Faults()
 void Init_Systick_Timer(uint32_t tick_hz)
 {
 	// SysTick Reload Value Register
-	uint32_t volatile *const pSRVR = (uint32_t*) 0xE000E014;
+	uint32_t volatile *const pSRVR = (uint32_t *)0xE000E014;
 
 	// SysTick Control and Status Register
-	uint32_t volatile *const pSCSR = (uint32_t*) 0xE000E010;
+	uint32_t volatile *const pSCSR = (uint32_t *)0xE000E010;
 
 	uint32_t count_value = (SYSTICK_TIM_CLK / tick_hz) - 1;
 
@@ -183,12 +187,13 @@ void Init_Systick_Timer(uint32_t tick_hz)
 }
 
 __attribute__((naked)) void Init_Scheduler_Stack(
-		uint32_t const sched_top_of_stack)
+	uint32_t const sched_top_of_stack)
 {
-	__asm volatile ("MSR MSP,%0"::"r"(sched_top_of_stack):);
+	__asm volatile("MSR MSP,%0" ::"r"(sched_top_of_stack)
+				   :);
 
 	// Return from function call ( main() )
-	__asm volatile ("BX LR");
+	__asm volatile("BX LR");
 }
 
 void Init_Task_Stacks()
@@ -212,7 +217,7 @@ void Init_Task_Stacks()
 	{
 		user_tasks[i].current_state = TASK_READY_STATE;
 
-		pPSP = (uint32_t*) user_tasks[i].psp_value;
+		pPSP = (uint32_t *)user_tasks[i].psp_value;
 
 		// XPSR
 		pPSP--;
@@ -220,7 +225,7 @@ void Init_Task_Stacks()
 
 		// PC
 		pPSP--;
-		*pPSP = (uint32_t) user_tasks[i].task_handler;
+		*pPSP = (uint32_t)user_tasks[i].task_handler;
 
 		// LR
 		pPSP--;
@@ -232,7 +237,7 @@ void Init_Task_Stacks()
 			*pPSP = 0;
 		}
 
-		user_tasks[i].psp_value = (uint32_t) pPSP;
+		user_tasks[i].psp_value = (uint32_t)pPSP;
 	}
 }
 
@@ -243,21 +248,21 @@ __attribute__((naked)) void Switch_To_PSP()
 	// Get the value of PSP of current stack
 
 	// Preserve LR which connects back to main()
-	__asm volatile ("PUSH {LR}");
-	__asm volatile ("BL Get_PSP_Value");
+	__asm volatile("PUSH {LR}");
+	__asm volatile("BL Get_PSP_Value");
 
 	// Initialize PSP
-	__asm volatile ("MSR PSP,R0");
+	__asm volatile("MSR PSP,R0");
 
 	// Pops back LR value
-	__asm volatile ("POP {LR}");
+	__asm volatile("POP {LR}");
 
 	// 2. Change SP to PSP using CONTROL register
-	__asm volatile ("MOV R0,#0x02");
-	__asm volatile ("MSR CONTROL,R0");
+	__asm volatile("MOV R0,#0x02");
+	__asm volatile("MSR CONTROL,R0");
 
 	// Return from function call ( main() )
-	__asm volatile ("BX LR");
+	__asm volatile("BX LR");
 }
 
 void Save_PSP_Value(uint32_t const stack_addr)
@@ -276,8 +281,7 @@ void Update_Next_Task()
 	{
 		current_task++;
 		current_task %= MAX_TASKS;
-	} while (user_tasks[current_task].current_state == TASK_BLOCKED_STATE
-			|| !current_task);
+	} while (user_tasks[current_task].current_state == TASK_BLOCKED_STATE || !current_task);
 }
 
 void Task_Delay(uint32_t tick_count)
@@ -302,7 +306,7 @@ void Task_Delay(uint32_t tick_count)
 void Schedule()
 {
 	// Pend PendSV
-	uint32_t volatile *const pICSR = (uint32_t*) 0xE000ED04;
+	uint32_t volatile *const pICSR = (uint32_t *)0xE000ED04;
 
 	*pICSR |= (1 << 28);
 }
@@ -328,7 +332,7 @@ void Unblock_Task()
 
 void SysTick_Handler()
 {
-	uint32_t volatile *const pICSR = (uint32_t*) 0xE000ED04;
+	uint32_t volatile *const pICSR = (uint32_t *)0xE000ED04;
 
 	// 1. Update global tick count
 	Update_Global_Tick_Count();
@@ -338,50 +342,49 @@ void SysTick_Handler()
 
 	// 3. Pend PendSV
 	*pICSR |= (1 << 28);
-
 }
 
 __attribute__((naked)) void PendSV_Handler()
 {
 	/* Save the context of current task */
 
-// 1. Get current running task's PSP value
-	__asm volatile ("MRS R0,PSP");
+	// 1. Get current running task's PSP value
+	__asm volatile("MRS R0,PSP");
 
-// 2. Using that PSP value to store SF2 (R4 to R11)
-// Just like PUSH instruction but CANNOT use PUSH instruction
-// since this is handler, MSP will be affected.
-// => Use STORE operation
-// Use STMDB instruction (Example syntax: "STMDB R1!,{R3-R6,R11,R12}")
-// "Rn!" symbol is use to load final address to Rn register
-	__asm volatile ("STMDB R0!,{R4-R11}");
+	// 2. Using that PSP value to store SF2 (R4 to R11)
+	// Just like PUSH instruction but CANNOT use PUSH instruction
+	// since this is handler, MSP will be affected.
+	// => Use STORE operation
+	// Use STMDB instruction (Example syntax: "STMDB R1!,{R3-R6,R11,R12}")
+	// "Rn!" symbol is use to load final address to Rn register
+	__asm volatile("STMDB R0!,{R4-R11}");
 
-// 3. PUSH LR
-	__asm volatile ("PUSH {LR}");
+	// 3. PUSH LR
+	__asm volatile("PUSH {LR}");
 
-// 4. Save the current value of PSP
-	__asm volatile ("BL Save_PSP_Value");
+	// 4. Save the current value of PSP
+	__asm volatile("BL Save_PSP_Value");
 
 	/* Retrieve the context of next task */
 
-// 1. Decide the next task to run
-	__asm volatile ("BL Update_Next_Task");
+	// 1. Decide the next task to run
+	__asm volatile("BL Update_Next_Task");
 
-// 2. Get its past PSP value
-	__asm volatile ("BL Get_PSP_Value");
-// at this moment, PSP value is in R0 register
+	// 2. Get its past PSP value
+	__asm volatile("BL Get_PSP_Value");
+	// at this moment, PSP value is in R0 register
 
-// 3. Using that PSP value retrieve SF2 (R4 to R11)
-	__asm volatile ("LDMIA R0!,{R4-R11}");
+	// 3. Using that PSP value retrieve SF2 (R4 to R11)
+	__asm volatile("LDMIA R0!,{R4-R11}");
 
-// 4. Update PSP and exit
-	__asm volatile ("MSR PSP,R0");
+	// 4. Update PSP and exit
+	__asm volatile("MSR PSP,R0");
 
-// 5. POP LR
-	__asm volatile ("POP {LR}");
+	// 5. POP LR
+	__asm volatile("POP {LR}");
 
-// 6. Return from function call
-	__asm volatile ("BX LR");
+	// 6. Return from function call
+	__asm volatile("BX LR");
 }
 
 void MemManage_Handler()
