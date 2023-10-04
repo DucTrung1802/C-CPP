@@ -7,10 +7,13 @@
 #define STACK_START     SRAM_END
 
 extern uint32_t end_of_text;
+extern uint32_t _la_data;
 extern uint32_t start_of_data;
 extern uint32_t end_of_data;
 extern uint32_t start_of_bss;
 extern uint32_t end_of_bss;
+
+void __libc_init_array();
 
 /* Function prototype of main */
 int main(void);
@@ -204,7 +207,7 @@ void Reset_Handler(void)
     // 1. Copy .data section from FLASH to SRAM
     uint32_t size = (uint32_t)&end_of_data - (uint32_t)&start_of_data;
 
-    uint8_t *p_src = (uint8_t *)&end_of_text;   // FLASH
+    uint8_t *p_src = (uint8_t *)&_la_data;   // FLASH
     uint8_t *p_dst = (uint8_t *)&start_of_data; // SRAM
 
     for (uint32_t i = 0; i < size; i++)
@@ -220,6 +223,8 @@ void Reset_Handler(void)
     {
         *p_dst++ = 0;
     }
+
+    __libc_init_array();
 
     // 3. Call main()
     main();

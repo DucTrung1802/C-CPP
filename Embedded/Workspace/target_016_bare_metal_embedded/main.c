@@ -70,7 +70,7 @@ TCB_t user_tasks[MAX_TASKS];
 
 int main(void)
 {
-	// printf("Hello\n");
+	printf("Hello\n");
 
 	Init_Onboard_LEDs();
 
@@ -386,28 +386,28 @@ __attribute__((naked)) void PendSV_Handler()
 
 void MemManage_Handler()
 {
-	// printf("MemManage_Handler\n");
+	printf("MemManage_Handler\n");
 	while (1)
 		;
 }
 
 void BusFault_Handler()
 {
-	// printf("BusFault_Handler\n");
+	printf("BusFault_Handler\n");
 	while (1)
 		;
 }
 
 void UsageFault_Handler()
 {
-	// printf("UsageFault_Handler\n");
+	printf("UsageFault_Handler\n");
 	while (1)
 		;
 }
 
 void HardFault_Handler()
 {
-	// printf("HardFault_Handler\n");
+	printf("HardFault_Handler\n");
 	while (1)
 		;
 }

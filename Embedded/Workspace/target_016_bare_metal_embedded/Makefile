@@ -1,20 +1,19 @@
 CC=arm-none-eabi-gcc
 MACHINE=cortex-m4
-CFLAGS= -c -mcpu=$(MACHINE) -mthumb -std=gnu11 -Wall -O0
-LDFLAGS= -nostdlib -T stm32_ls.ld -Wl,-Map=final.map
+CFLAGS= -c -mcpu=$(MACHINE) -mthumb -mfloat-abi=soft -std=gnu11 -Wall -O0
+LDFLAGS= -mcpu=$(MACHINE) -mthumb -mfloat-abi=soft --specs=nano.specs -T stm32_ls.ld -Wl,-Map=final.map
 
-all:main.o onboard_leds.o stm32_startup.o final.elf
 
-main.o: main.c
+SRC_FILES=$(wildcard *.c)
+OBJ_FILES=$(SRC_FILES:.c=.o)
+
+
+all:$(OBJ_FILES) final.elf
+
+%.o: %.c
 	$(CC) $(CFLAGS) $^ -o $@
 
-onboard_leds.o: onboard_leds.c
-	$(CC) $(CFLAGS) $^ -o $@
-
-stm32_startup.o: stm32_startup.c
-	$(CC) $(CFLAGS) $^ -o $@
-
-final.elf: main.o onboard_leds.o stm32_startup.o
+final.elf: $(OBJ_FILES)
 	$(CC) $(LDFLAGS) $^ -o $@
 
 clean:
@@ -22,3 +21,4 @@ clean:
 
 load:
 	openocd -f board/stm32f4discovery.cfg
+
