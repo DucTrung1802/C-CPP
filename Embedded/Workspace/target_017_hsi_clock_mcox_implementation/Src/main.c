@@ -57,6 +57,9 @@ int main(void) {
 	// 2. Set clock source MCO1 using HSI (Microcontroller clock output 1)
 	*p_rcc_cfgr_addr &= ~(3 << 21);
 
+	// 2.1 Set the pre-scaler to division by 2 (16 / 2 = 8 MHz)
+	*p_rcc_cfgr_addr |= (0x04 << 24);
+
 	// 3. Enable AHB1 bus for GPIOA
 	*p_rcc_ahb1enr_addr |= (1 << 0);
 
