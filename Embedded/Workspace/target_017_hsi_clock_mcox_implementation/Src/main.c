@@ -51,7 +51,7 @@ int main(void) {
 	uint32_t volatile *const p_gpioa_moder_addr = (uint32_t*) GPIOA_MODER_ADDR;
 	uint32_t volatile *const p_gpioa_afrh_addr = (uint32_t*) GPIOA_AFRH_ADDR;
 
-	// 1. Turn on RCC (this is configured as default when the MCU is reset)
+	// 1. Turn on HSI (this is configured as default when the MCU is reset)
 	*p_rcc_cr_addr |= (1 << 0);
 
 	// 2. Set clock source MCO1 using HSI (Microcontroller clock output 1)
