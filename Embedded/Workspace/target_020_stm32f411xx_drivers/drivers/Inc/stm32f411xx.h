@@ -1,6 +1,8 @@
 #ifndef INC_STM32F411XX_H_
 #define INC_STM32F411XX_H_
 
+#define __vo volatile
+
 /*
  * Base addresses of FLASH and SAM memories
  * */
@@ -72,5 +74,30 @@
  *Base addresses of AHB1 bus peripherals
  */
 #define USB_OTG_FS_BASE_ADDR			((AHB2_BASE_ADDR)+(0x0000UL))
+
+/*
+ * Peripheral register definition structures
+ */
+typedef struct {
+	__vo uint32_t MODER;// GPIO port mode register					Offset: 0x00
+	__vo uint32_t OTYPER; // GPIO port output type register			Offset: 0x04
+	__vo uint32_t OSPEEDR; // GPIO port output speed register			Offset: 0x08
+	__vo uint32_t PUPDR; // GPIO port pull-up/pull-down register		Offset: 0x0C
+	__vo uint32_t IDR;     // GPIO port input data register			Offset: 0x10
+	__vo uint32_t ODR;   // GPIO port output data register			Offset: 0x14
+	__vo uint32_t BSRR; // GPIO port bit set/reset register			Offset: 0x18
+	__vo uint32_t LCKR;	// GPIO port configuration lock register	Offset: 0x1C
+	__vo uint32_t AFR[2]; // GPIO alternate function registers, [0]: low, [1]: high		Offset: AFRL 0x20, AFRH 0x24
+} GPIO_RegDef_t;
+
+/*
+ * Peripheral definitions (Peripheral base addresses typecasted to xxx_RegDef_t)
+ */
+#define GPIOA					((GPIO_RegDef_t*)GPIOA_BASE_ADDR)
+#define GPIOB					((GPIO_RegDef_t*)GPIOB_BASE_ADDR)
+#define GPIOC					((GPIO_RegDef_t*)GPIOC_BASE_ADDR)
+#define GPIOD					((GPIO_RegDef_t*)GPIOD_BASE_ADDR)
+#define GPIOE					((GPIO_RegDef_t*)GPIOE_BASE_ADDR)
+#define GPIOH					((GPIO_RegDef_t*)GPIOH_BASE_ADDR)
 
 #endif /* INC_STM32F411XX_H_ */
