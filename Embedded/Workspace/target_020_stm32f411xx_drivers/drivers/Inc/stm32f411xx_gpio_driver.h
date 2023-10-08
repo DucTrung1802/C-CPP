@@ -9,10 +9,10 @@
 typedef struct
 {
 	uint8_t GPIO_PinNumber;
-	uint8_t GPIO_PinMode;
-	uint8_t GPIO_PinSpeed;
-	uint8_t GPIO_PinPuPdControl;
-	uint8_t GPIO_PinOPType;
+	uint8_t GPIO_PinMode; /* 			Possible values from @GPIO_MODES */
+	uint8_t GPIO_PinSpeed; /* 			Possible values from @GPIO_SPEED */
+	uint8_t GPIO_PinPuPdControl; /* 	Possible values from @GPIO_PULL */
+	uint8_t GPIO_PinOPType; /* 			Possible values from @GPIO_OP_TYPE */
 	uint8_t GPIO_PinAltFuncMode;
 } GPIO_PinConfig_t;
 
@@ -27,6 +27,7 @@ typedef struct
 } GPIO_Handler_t;
 
 /*
+ * @GPIO_MODES
  * GPIO pin possible modes
  */
 #define GPIO_MODE_INPUT		0		/* Input */
@@ -38,12 +39,14 @@ typedef struct
 #define GPIO_MODE_IT_BE		6		/* Interrupt - both edges */
 
 /*
+ * @GPIO_OP_TYPE
  * GPIO pin possible output types
  */
 #define GPIO_OP_TYPE_PP		0		/* Output mode - push pull */
 #define GPIO_OP_TYPE_OD		1		/* Output mode - open drain */
 
 /*
+ * @GPIO_SPEED
  * GPIO pin possible speeds
  */
 #define GPIO_SPEED_LOW		0
@@ -52,15 +55,12 @@ typedef struct
 #define GPIO_SPEED_HIGH		3
 
 /*
+ * @GPIO_PULL
  * GPIO pin possible pull-up / pull-down
  */
 #define GPIO_NO_PULL		0
 #define GPIO_PULL_UP		1
 #define GPIO_PULL_DOWN		2
-
-/*
- * GPIO pin input data
- */
 
 /*****************************************************************************************
  * 								APIs supported by this driver

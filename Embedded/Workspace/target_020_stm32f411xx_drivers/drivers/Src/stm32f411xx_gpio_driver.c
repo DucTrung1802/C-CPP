@@ -82,7 +82,18 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi)
 void GPIO_Init(GPIO_Handler_t *pGPIOHandler)
 {
 	// 1. Configure the mode of GPIO pin
+	uint32_t temp = 0; /* Temp register */
 
+	if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode <= GPIO_MODE_ANALOG)
+	{
+		// Non-interrupt mode
+		temp = (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode
+				<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+	}
+	else
+	{
+		// Interrupt mode
+	}
 	// 2. Configure the speed
 
 	// 3. Configure the PU/PD setting
