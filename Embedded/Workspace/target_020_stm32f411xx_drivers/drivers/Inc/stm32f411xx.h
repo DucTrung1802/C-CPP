@@ -136,7 +136,7 @@ typedef struct {
 /*
  * Peripheral definitions (Peripheral base addresses typecasted to xxx_RegDef_t)
  */
-#define RCC						((RCC_RegDef_t*RCC_BASE_ADDR))
+#define RCC						((RCC_RegDef_t*)RCC_BASE_ADDR)
 
 #define GPIOA					((GPIO_RegDef_t*)GPIOA_BASE_ADDR)
 #define GPIOB					((GPIO_RegDef_t*)GPIOB_BASE_ADDR)
@@ -151,40 +151,40 @@ typedef struct {
 /*
  * Clock Enable Macros for GPIOx peripherals
  */
-#define	GPIOA_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 0))
-#define	GPIOB_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 1))
-#define	GPIOC_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 2))
-#define	GPIOD_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 3))
-#define	GPIOE_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 4))
-#define	GPIOH_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 7))
+#define GPIOA_PCLOCK_EN()    	(RCC->AHB1ENR |= (1 << 0))
+#define	GPIOB_PCLOCK_EN()		(RCC->AHB1ENR |= (1 << 1))
+#define	GPIOC_PCLOCK_EN()		(RCC->AHB1ENR |= (1 << 2))
+#define	GPIOD_PCLOCK_EN()		(RCC->AHB1ENR |= (1 << 3))
+#define	GPIOE_PCLOCK_EN()		(RCC->AHB1ENR |= (1 << 4))
+#define	GPIOH_PCLOCK_EN()		(RCC->AHB1ENR |= (1 << 7))
 
 /*
  * Clock Enable Macros for I2Cx peripherals
  */
-#define	I2C1_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 21))
-#define	I2C2_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 22))
-#define	I2C3_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 23))
+#define	I2C1_PCLOCK_EN()		(RCC->APB1ENR |= (1 << 21))
+#define	I2C2_PCLOCK_EN()		(RCC->APB1ENR |= (1 << 22))
+#define	I2C3_PCLOCK_EN()		(RCC->APB1ENR |= (1 << 23))
 
 /*
  * Clock Enable Macros for SPIx peripherals
  */
-#define	SPI1_I2S1_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 12))
-#define	SPI2_I2S2_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 14))
-#define	SPI3_I2S3_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 15))
-#define	SPI4_I2S4_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 13))
-#define	SPI5_I2S5_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 20))
+#define	SPI1_I2S1_PCLOCK_EN()		(RCC->APB2ENR |= (1 << 12))
+#define	SPI2_I2S2_PCLOCK_EN()		(RCC->APB1ENR |= (1 << 14))
+#define	SPI3_I2S3_PCLOCK_EN()		(RCC->APB1ENR |= (1 << 15))
+#define	SPI4_I2S4_PCLOCK_EN()		(RCC->APB2ENR |= (1 << 13))
+#define	SPI5_I2S5_PCLOCK_EN()		(RCC->APB2ENR |= (1 << 20))
 
 /*
  * Clock Enable Macros for USARTx peripherals
  */
-#define	USART1_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 4))
-#define	USART2_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 17))
-#define	USART6_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 5))
+#define	USART1_PCLOCK_EN()		(RCC->APB2ENR |= (1 << 4))
+#define	USART2_PCLOCK_EN()		(RCC->APB1ENR |= (1 << 17))
+#define	USART6_PCLOCK_EN()		(RCC->APB2ENR |= (1 << 5))
 
 /*
  * Clock Enable Macros for SYSCFG peripherals
  */
-#define	SYSCFG_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 14))
+#define	SYSCFG_PCLOCK_EN()		(RCC->APB2ENR |= (1 << 14))
 
 /*
  * DISABLE
@@ -192,40 +192,40 @@ typedef struct {
 /*
  * Clock Disable Macros for GPIOx peripherals
  */
-#define	GPIOA_PCLOCK_DI()		(RCC->AHB1_BASE_ADDR &= ~(1 << 0))
-#define	GPIOB_PCLOCK_DI()		(RCC->AHB1_BASE_ADDR &= ~(1 << 1))
-#define	GPIOC_PCLOCK_DI()		(RCC->AHB1_BASE_ADDR &= ~(1 << 2))
-#define	GPIOD_PCLOCK_DI()		(RCC->AHB1_BASE_ADDR &= ~(1 << 3))
-#define	GPIOE_PCLOCK_DI()		(RCC->AHB1_BASE_ADDR &= ~(1 << 4))
-#define	GPIOH_PCLOCK_DI()		(RCC->AHB1_BASE_ADDR &= ~(1 << 7))
+#define	GPIOA_PCLOCK_DI()		(RCC->AHB1ENR &= ~(1 << 0))
+#define	GPIOB_PCLOCK_DI()		(RCC->AHB1ENR &= ~(1 << 1))
+#define	GPIOC_PCLOCK_DI()		(RCC->AHB1ENR &= ~(1 << 2))
+#define	GPIOD_PCLOCK_DI()		(RCC->AHB1ENR &= ~(1 << 3))
+#define	GPIOE_PCLOCK_DI()		(RCC->AHB1ENR &= ~(1 << 4))
+#define	GPIOH_PCLOCK_DI()		(RCC->AHB1ENR &= ~(1 << 7))
 
 /*
  * Clock Disable Macros for I2Cx peripherals
  */
-#define	I2C1_PCLOCK_DI()		(RCC->APB1_BASE_ADDR &= ~(1 << 21))
-#define	I2C2_PCLOCK_DI()		(RCC->APB1_BASE_ADDR &= ~(1 << 22))
-#define	I2C3_PCLOCK_DI()		(RCC->APB1_BASE_ADDR &= ~(1 << 23))
+#define	I2C1_PCLOCK_DI()		(RCC->APB1ENR &= ~(1 << 21))
+#define	I2C2_PCLOCK_DI()		(RCC->APB1ENR &= ~(1 << 22))
+#define	I2C3_PCLOCK_DI()		(RCC->APB1ENR &= ~(1 << 23))
 
 /*
  * Clock Disable Macros for SPIx peripherals
  */
-#define	SPI1_I2S1_PCLOCK_DI()		(RCC->APB2_BASE_ADDR &= ~(1 << 12))
-#define	SPI2_I2S2_PCLOCK_DI()		(RCC->APB1_BASE_ADDR &= ~(1 << 14))
-#define	SPI3_I2S3_PCLOCK_DI()		(RCC->APB1_BASE_ADDR &= ~(1 << 15))
-#define	SPI4_I2S4_PCLOCK_DI()		(RCC->APB2_BASE_ADDR &= ~(1 << 13))
-#define	SPI5_I2S5_PCLOCK_DI()		(RCC->APB2_BASE_ADDR &= ~(1 << 20))
+#define	SPI1_I2S1_PCLOCK_DI()		(RCC->APB2ENR &= ~(1 << 12))
+#define	SPI2_I2S2_PCLOCK_DI()		(RCC->APB1ENR &= ~(1 << 14))
+#define	SPI3_I2S3_PCLOCK_DI()		(RCC->APB1ENR &= ~(1 << 15))
+#define	SPI4_I2S4_PCLOCK_DI()		(RCC->APB2ENR &= ~(1 << 13))
+#define	SPI5_I2S5_PCLOCK_DI()		(RCC->APB2ENR &= ~(1 << 20))
 
 /*
  * Clock Disable Macros for USARTx peripherals
  */
-#define	USART1_PCLOCK_DI()		(RCC->APB2_BASE_ADDR &= ~(1 << 4))
-#define	USART2_PCLOCK_DI()		(RCC->APB1_BASE_ADDR &= ~(1 << 17))
-#define	USART6_PCLOCK_DI()		(RCC->APB2_BASE_ADDR &= ~(1 << 5))
+#define	USART1_PCLOCK_DI()		(RCC->APB2ENR &= ~(1 << 4))
+#define	USART2_PCLOCK_DI()		(RCC->APB1ENR &= ~(1 << 17))
+#define	USART6_PCLOCK_DI()		(RCC->APB2ENR &= ~(1 << 5))
 
 /*
  * Clock Disable Macros for SYSCFG peripherals
  */
-#define	SYSCFG_PCLOCK_DI()		(RCC->APB2_BASE_ADDR &= ~(1 << 14))
+#define	SYSCFG_PCLOCK_DI()		(RCC->APB2ENR &= ~(1 << 14))
 
 /*
  * Generic macros
