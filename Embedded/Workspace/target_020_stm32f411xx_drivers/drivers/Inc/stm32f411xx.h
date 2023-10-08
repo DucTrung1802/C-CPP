@@ -80,7 +80,8 @@
 /*
  * RCC register definition structures
  */
-typedef struct {
+typedef struct
+{
 	__vo uint32_t CR; /* 		RCC clock control register									Offset: 0x00 */
 	__vo uint32_t PLLCFGR; /* 	RCC PLL configuration register								Offset: 0x04 */
 	__vo uint32_t CFGR; /* 		RCC clock configuration register							Offset: 0x08 */
@@ -121,7 +122,8 @@ typedef struct {
 /*
  * Peripheral register definition structures
  */
-typedef struct {
+typedef struct
+{
 	__vo uint32_t MODER; /* 	GPIO port mode register									Offset: 0x00 */
 	__vo uint32_t OTYPER; /* 	GPIO port output type register							Offset: 0x04 */
 	__vo uint32_t OSPEEDR; /*	GPIO port output speed register							Offset: 0x08 */

@@ -6,7 +6,8 @@
 /*
  * Configuration structure for a GPIO pin
  */
-typedef struct {
+typedef struct
+{
 	uint8_t GPIO_PinNumber;
 	uint8_t GPIO_PinMode;
 	uint8_t GPIO_PinSpeed;
@@ -18,11 +19,48 @@ typedef struct {
 /*
  * Handle structure for a GPIO pin
  */
-typedef struct {
+typedef struct
+{
 	// Pointer to hold address of the GPIO peripheral
 	GPIO_RegDef_t *pGPIOx; /* 			This holds the base address of the GPIO port to which the pin belongs */
 	GPIO_PinConfig_t GPIO_PinConfig; /* This holds GPIO pin configuration settings */
 } GPIO_Handler_t;
+
+/*
+ * GPIO pin possible modes
+ */
+#define GPIO_MODE_INPUT		0		/* Input */
+#define GPIO_MODE_OUT		1		/* Output */
+#define GPIO_MODE_ALT_FUNC 	2		/* Alternative function */
+#define GPIO_MODE_ANALOG	3		/* Analog mode */
+#define GPIO_MODE_IT_FE		4		/* Interrupt - falling edge */
+#define GPIO_MODE_IT_RE		5		/* Interrupt - rising edge */
+#define GPIO_MODE_IT_BE		6		/* Interrupt - both edges */
+
+/*
+ * GPIO pin possible output types
+ */
+#define GPIO_OP_TYPE_PP		0		/* Output mode - push pull */
+#define GPIO_OP_TYPE_OD		1		/* Output mode - open drain */
+
+/*
+ * GPIO pin possible speeds
+ */
+#define GPIO_SPEED_LOW		0
+#define GPIO_SPEED_MEDIUM	1
+#define GPIO_SPEED_FAST		2
+#define GPIO_SPEED_HIGH		3
+
+/*
+ * GPIO pin possible pull-up / pull-down
+ */
+#define GPIO_NO_PULL		0
+#define GPIO_PULL_UP		1
+#define GPIO_PULL_DOWN		2
+
+/*
+ * GPIO pin input data
+ */
 
 /*****************************************************************************************
  * 								APIs supported by this driver

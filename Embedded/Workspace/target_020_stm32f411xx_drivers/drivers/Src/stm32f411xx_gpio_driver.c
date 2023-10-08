@@ -11,33 +11,59 @@
  * @param pGPIOx	Base address of the GPIO peripheral
  * @param EnorDi	Macro 'ENABLE' or 'DISABLE'
  */
-void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi) {
-	if (EnorDi) {
-		if (pGPIOx == GPIOA) {
+void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi)
+{
+	if (EnorDi)
+	{
+		if (pGPIOx == GPIOA)
+		{
 			GPIOA_PCLOCK_EN();
-		} else if (pGPIOx == GPIOB) {
+		}
+		else if (pGPIOx == GPIOB)
+		{
 			GPIOB_PCLOCK_EN();
-		} else if (pGPIOx == GPIOC) {
+		}
+		else if (pGPIOx == GPIOC)
+		{
 			GPIOC_PCLOCK_EN();
-		} else if (pGPIOx == GPIOD) {
+		}
+		else if (pGPIOx == GPIOD)
+		{
 			GPIOD_PCLOCK_EN();
-		} else if (pGPIOx == GPIOE) {
+		}
+		else if (pGPIOx == GPIOE)
+		{
 			GPIOE_PCLOCK_EN();
-		} else if (pGPIOx == GPIOH) {
+		}
+		else if (pGPIOx == GPIOH)
+		{
 			GPIOH_PCLOCK_EN();
 		}
-	} else {
-		if (pGPIOx == GPIOA) {
+	}
+	else
+	{
+		if (pGPIOx == GPIOA)
+		{
 			GPIOA_PCLOCK_DI();
-		} else if (pGPIOx == GPIOB) {
+		}
+		else if (pGPIOx == GPIOB)
+		{
 			GPIOB_PCLOCK_DI();
-		} else if (pGPIOx == GPIOC) {
+		}
+		else if (pGPIOx == GPIOC)
+		{
 			GPIOC_PCLOCK_DI();
-		} else if (pGPIOx == GPIOD) {
+		}
+		else if (pGPIOx == GPIOD)
+		{
 			GPIOD_PCLOCK_DI();
-		} else if (pGPIOx == GPIOE) {
+		}
+		else if (pGPIOx == GPIOE)
+		{
 			GPIOE_PCLOCK_DI();
-		} else if (pGPIOx == GPIOH) {
+		}
+		else if (pGPIOx == GPIOH)
+		{
 			GPIOH_PCLOCK_DI();
 		}
 	}
@@ -53,7 +79,19 @@ void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi) {
  *
  * @param pGPIOHandler	Address of GPIO Handler
  */
-void GPIO_Init(GPIO_Handler_t *pGPIOHandler);
+void GPIO_Init(GPIO_Handler_t *pGPIOHandler)
+{
+	// 1. Configure the mode of GPIO pin
+
+	// 2. Configure the speed
+
+	// 3. Configure the PU/PD setting
+
+	// 4. Configure the output type
+
+	// 5. Configure the alternative function
+}
+
 void GPIO_DeInit(GPIO_RegDef_t *pGPIOx);
 
 /*
