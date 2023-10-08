@@ -76,13 +76,54 @@
 #define USB_OTG_FS_BASE_ADDR			((AHB2_BASE_ADDR)+(0x0000UL))
 
 /*
+ * RCC register definition structures
+ */
+typedef struct {
+	__vo uint32_t CR; // RCC clock control register							Offset: 0x00
+	__vo uint32_t PLLCFGR; // RCC PLL configuration register				Offset: 0x04
+	__vo uint32_t CFGR;	// RCC clock configuration register					Offset: 0x08
+	__vo uint32_t CIR; // RCC clock interrupt register						Offset: 0x0C
+	__vo uint32_t AHB1RSTR; // RCC AHB1 peripheral reset register			Offset: 0x10
+	__vo uint32_t AHB2RSTR; // RCC AHB2 peripheral reset register			Offset: 0x14
+	__vo uint32_t RESERVE1; // Reserve 1									Offset: 0x18
+	__vo uint32_t RESERVE2; // Reserve 2									Offset: 0x1C
+	__vo uint32_t APB1RSTR;	// RCC APB1 peripheral reset register			Offset: 0x20
+	__vo uint32_t APB2RSTR;	// RCC APB2 peripheral reset register 			Offset: 0x24
+	__vo uint32_t RESERVE3;	// Reserve 3									Offset: 0x28
+	__vo uint32_t RESERVE4;	// Reserve 4									Offset: 0x2C
+	__vo uint32_t AHB1ENR;// RCC AHB1 peripheral clock enable register		Offset: 0x30
+	__vo uint32_t AHB2ENR;// RCC AHB2 peripheral clock enable register		Offset: 0x34
+	__vo uint32_t RESERVE5;	// Reserve 5									Offset: 0x38
+	__vo uint32_t RESERVE6;	// Reserve 6									Offset: 0x3C
+	__vo uint32_t APB1ENR;// RCC APB1 peripheral clock enable register		Offset: 0x40
+	__vo uint32_t APB2ENR;// RCC APB2 peripheral clock enable register		Offset: 0x44
+	__vo uint32_t RESERVE7;	// Reserve 7									Offset: 0x48
+	__vo uint32_t RESERVE8;	// Reserve 8									Offset: 0x4C
+	__vo uint32_t AHB1LPENR;// RCC AHB1 peripheral clock enable in low power mode register	Offset: 0x50
+	__vo uint32_t AHB2LPENR;// RCC AHB2 peripheral clock enable in low power mode register	Offset: 0x54
+	__vo uint32_t RESERVE9;	// Reserve 9									Offset: 0x58
+	__vo uint32_t RESERVE10;// Reserve 10									Offset: 0x5C
+	__vo uint32_t APB1LPENR;// RCC APB1 peripheral clock enable in low power mode register	Offset: 0x60
+	__vo uint32_t APB2LPENR;// RCC APB2 peripheral clock enable in low power mode register	Offset: 0x64
+	__vo uint32_t RESERVE11;// Reserve 11									Offset: 0x68
+	__vo uint32_t RESERVE12;// Reserve 12									Offset: 0x6C
+	__vo uint32_t BDCR;	// RCC Backup domain control register				Offset: 0x70
+	__vo uint32_t CSR;// RCC clock control & status register				Offset: 0x74
+	__vo uint32_t RESERVE13;// Reserve 13									Offset: 0x78
+	__vo uint32_t RESERVE14;// Reserve 14									Offset: 0x7C
+	__vo uint32_t SSCGR;// RCC spread spectrum clock generation register	Offset: 0x80
+	__vo uint32_t PLLI2SCFGR;// RCC PLLI2S configuration register			Offset: 0x84
+	__vo uint32_t DCKCFGR;// RCC Dedicated Clocks Configuration Register	Offset: 0x8C
+} RCC_RegDef_t;
+
+/*
  * Peripheral register definition structures
  */
 typedef struct {
-	__vo uint32_t MODER;// GPIO port mode register					Offset: 0x00
+	__vo uint32_t MODER; // GPIO port mode register					Offset: 0x00
 	__vo uint32_t OTYPER; // GPIO port output type register			Offset: 0x04
-	__vo uint32_t OSPEEDR; // GPIO port output speed register			Offset: 0x08
-	__vo uint32_t PUPDR; // GPIO port pull-up/pull-down register		Offset: 0x0C
+	__vo uint32_t OSPEEDR; // GPIO port output speed register		Offset: 0x08
+	__vo uint32_t PUPDR; // GPIO port pull-up/pull-down register	Offset: 0x0C
 	__vo uint32_t IDR;     // GPIO port input data register			Offset: 0x10
 	__vo uint32_t ODR;   // GPIO port output data register			Offset: 0x14
 	__vo uint32_t BSRR; // GPIO port bit set/reset register			Offset: 0x18
