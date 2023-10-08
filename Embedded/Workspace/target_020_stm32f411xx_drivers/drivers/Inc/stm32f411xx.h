@@ -143,4 +143,42 @@ typedef struct {
 #define GPIOE					((GPIO_RegDef_t*)GPIOE_BASE_ADDR)
 #define GPIOH					((GPIO_RegDef_t*)GPIOH_BASE_ADDR)
 
+/*
+ * Clock Enable Macros for GPIOx peripherals
+ */
+#define	GPIOA_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 0))
+#define	GPIOB_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 1))
+#define	GPIOC_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 2))
+#define	GPIOD_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 3))
+#define	GPIOE_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 4))
+#define	GPIOH_PCLOCK_EN()		(RCC->AHB1_BASE_ADDR |= (1 << 7))
+
+/*
+ * Clock Enable Macros for I2Cx peripherals
+ */
+#define	I2C1_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 21))
+#define	I2C2_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 22))
+#define	I2C3_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 23))
+
+/*
+ * Clock Enable Macros for SPIx peripherals
+ */
+#define	SPI1_I2S1_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 12))
+#define	SPI2_I2S2_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 14))
+#define	SPI3_I2S3_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 15))
+#define	SPI4_I2S4_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 13))
+#define	SPI5_I2S5_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 20))
+
+/*
+ * Clock Enable Macros for USARTx peripherals
+ */
+#define	USART1_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 4))
+#define	USART2_PCLOCK_EN()		(RCC->APB1_BASE_ADDR |= (1 << 17))
+#define	USART6_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 5))
+
+/*
+ * Clock Enable Macros for SYSCFG peripherals
+ */
+#define	SYSCFG_PCLOCK_EN()		(RCC->APB2_BASE_ADDR |= (1 << 14))
+
 #endif /* INC_STM32F411XX_H_ */
