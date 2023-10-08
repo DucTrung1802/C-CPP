@@ -1,6 +1,8 @@
 #ifndef INC_STM32F411XX_H_
 #define INC_STM32F411XX_H_
 
+#include <stdint.h>
+
 #define __vo volatile
 
 /*
@@ -224,5 +226,15 @@ typedef struct {
  * Clock Disable Macros for SYSCFG peripherals
  */
 #define	SYSCFG_PCLOCK_DI()		(RCC->APB2_BASE_ADDR &= ~(1 << 14))
+
+/*
+ * Generic macros
+ */
+#define ENABLE 			1
+#define DISABLE 		0
+#define SET				ENABLE
+#define RESET 			DISABLE
+#define GPIO_PIN_SET	SET
+#define GPIO_PIN_RESET	RESET
 
 #endif /* INC_STM32F411XX_H_ */
