@@ -131,6 +131,12 @@ void GPIO_Init(GPIO_Handler_t *pGPIOHandler)
 
 }
 
+/**
+ * @fn void GPIO_DeInit(GPIO_RegDef_t*)
+ * @brief	De-Initialize/Reset the given GPIO port
+ *
+ * @param pGPIOx	Desired GPIO port to be reset
+ */
 void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 {
 	if (pGPIOx == GPIOA)
@@ -162,8 +168,26 @@ void GPIO_DeInit(GPIO_RegDef_t *pGPIOx)
 /*
  * Data read and write
  */
-uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
-uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx);
+/**
+ * @fn uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t*, uint8_t)
+ * @brief	Read data from the given GPIO pin
+ *
+ * @param pGPIOx		The given GPIO port	(A/B/C/D/E/H)
+ * @param PinNumber		The given GPIO pin 	(0 - 15)
+ * @return
+ */
+uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
+{
+	uint8_t value;
+	value = (uint8_t) ((pGPIOx->IDR >> PinNumber) & 0x00000001);
+	return value;
+}
+
+uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
+{
+	return (uint16_t) pGPIOx->IDR;
+}
+
 void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber,
 		uint8_t Value);
 void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value);
