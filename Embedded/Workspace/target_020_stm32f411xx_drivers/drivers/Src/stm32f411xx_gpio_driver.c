@@ -96,6 +96,29 @@ void GPIO_Init(GPIO_Handler_t *pGPIOHandler)
 	else
 	{
 		// Interrupt mode
+		// 1. Reset rising/falling edge detection
+		EXTI->FTSR &= ~(1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+		EXTI->RTSR &= ~(1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+
+		// 2. Configure the egde type
+		if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_FE)
+		{
+			EXTI->FTSR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+		}
+		else if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_RE)
+		{
+			EXTI->RTSR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+		}
+		else if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_IT_BE)
+		{
+			EXTI->FTSR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+			EXTI->RTSR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+		}
+		// 3. Configure the GPIO port selection in SYSCFG_EXTICR
+
+		// 4. Enable the EXTI interrupt delivery using Interrupt Mask Register (IMR)
+		EXTI->IMR |= (1 << pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber);
+
 	}
 	// 2. Configure the speed
 	temp = (pGPIOHandler->GPIO_PinConfig.GPIO_PinSpeed

@@ -78,7 +78,7 @@
 #define USB_OTG_FS_BASE_ADDR			((AHB2_BASE_ADDR)+(0x0000UL))
 
 /*
- * RCC register definition structures
+ * Register definition structures for RCC
  */
 typedef struct
 {
@@ -120,7 +120,21 @@ typedef struct
 } RCC_RegDef_t;
 
 /*
- * Peripheral register definition structures
+ * Register definition structures for EXTI
+ */
+typedef struct
+{
+	__vo uint32_t IMR;/* Interrupt mask register				Offset: 0x00 */
+	__vo uint32_t EMR;/* Event mask register                    Offset: 0x04 */
+	__vo uint32_t RTSR;/* Rising trigger selection register     Offset: 0x08 */
+	__vo uint32_t FTSR;/* Falling trigger selection register    Offset: 0x0C */
+	__vo uint32_t SWIER;/* Software interrupt event register    Offset: 0x10 */
+	__vo uint32_t PR;/* Pending register                        Offset: 0x14 */
+
+} EXTI_RegDef_t;
+
+/*
+ * Register definition structures for GPIO
  */
 typedef struct
 {
@@ -139,6 +153,8 @@ typedef struct
  * Peripheral definitions (Peripheral base addresses typecasted to xxx_RegDef_t)
  */
 #define RCC						((RCC_RegDef_t*)RCC_BASE_ADDR)
+
+#define EXTI					((EXTI_RegDef_t*)EXTI_BASE_ADDR)
 
 #define GPIOA					((GPIO_RegDef_t*)GPIOA_BASE_ADDR)
 #define GPIOB					((GPIO_RegDef_t*)GPIOB_BASE_ADDR)
