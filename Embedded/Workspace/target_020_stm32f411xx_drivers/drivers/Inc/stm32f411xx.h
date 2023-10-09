@@ -116,6 +116,7 @@ typedef struct
 	__vo uint32_t RESERVE14;/* 	Reserve 14													Offset: 0x7C */
 	__vo uint32_t SSCGR;/* 		RCC spread spectrum clock generation register				Offset: 0x80 */
 	__vo uint32_t PLLI2SCFGR;/* RCC PLLI2S configuration register							Offset: 0x84 */
+	__vo uint32_t RESERVE15;/* 	Reserve 15													Offset: 0x88 */
 	__vo uint32_t DCKCFGR;/* 	RCC Dedicated Clocks Configuration Register					Offset: 0x8C */
 } RCC_RegDef_t;
 
@@ -132,6 +133,17 @@ typedef struct
 	__vo uint32_t PR;/* Pending register                        Offset: 0x14 */
 
 } EXTI_RegDef_t;
+
+/*
+ * Register definition structures for SYSCFG
+ */
+typedef struct
+{
+	__vo uint32_t MEMRMP; /* 	SYSCFG memory remap register								Offset: 0x00 */
+	__vo uint32_t PMC; /* 		SYSCFG peripheral mode configuration register 				Offset: 0x04 */
+	__vo uint32_t EXTICR[4]; /* SYSCFG external interrupt configuration register (1 - 4)	Offset: 0x08 - 0x14 */
+	__vo uint32_t CMPCR; /* 	Compensation cell control register 							Offset: 0x20 */
+} SYSCFG_RegDef_t;
 
 /*
  * Register definition structures for GPIO
@@ -155,6 +167,8 @@ typedef struct
 #define RCC						((RCC_RegDef_t*)RCC_BASE_ADDR)
 
 #define EXTI					((EXTI_RegDef_t*)EXTI_BASE_ADDR)
+
+#define SYSCFG					((SYSCFG_RegDef_t*)SYSCFG_BASE_ADDR)
 
 #define GPIOA					((GPIO_RegDef_t*)GPIOA_BASE_ADDR)
 #define GPIOB					((GPIO_RegDef_t*)GPIOB_BASE_ADDR)
@@ -281,6 +295,16 @@ typedef struct
 #define GPIO_PIN_NO_13  13
 #define GPIO_PIN_NO_14  14
 #define GPIO_PIN_NO_15  15
+
+/*
+ * Return port code of given GPIOx base address (GPIOA = 0, GPIOB = 1, ...)
+ */
+#define GPIO_BASE_ADDR_TO_CODE(x)	(	(x == GPIOA) ? 0: \
+										(x == GPIOB) ? 1: \
+										(x == GPIOC) ? 2: \
+										(x == GPIOD) ? 3: \
+										(x == GPIOE) ? 4: \
+										(x == GPIOH) ? 7: 0	)
 
 #ifndef INC_STM32F411XX_GPIO_DRIVER_H_
 #include "stm32f411xx_gpio_driver.h"
