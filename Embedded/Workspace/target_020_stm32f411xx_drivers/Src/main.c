@@ -25,7 +25,7 @@
 
 void delay(void)
 {
-	for (int i = 0; i < 200000; i++)
+	for (int i = 0; i < 300000; i++)
 		;
 }
 
@@ -39,12 +39,24 @@ int main(void)
 	GPIO_led_h.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
 	GPIO_led_h.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PULL;
 
+	GPIO_Handler_t GPIO_button_h;
+	GPIO_button_h.pGPIOx = GPIOA;
+	GPIO_button_h.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
+	GPIO_button_h.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_INPUT;
+	GPIO_button_h.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+
 	GPIO_PeriClockControl(GPIOD, ENABLE);
 	GPIO_Init(&GPIO_led_h);
+
+	GPIO_PeriClockControl(GPIOA, ENABLE);
+	GPIO_Init(&GPIO_button_h);
 	/* Loop forever */
 	while (1)
 	{
-		GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_12);
-		delay();
+		if (GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0) == GPIO_PIN_SET)
+		{
+			delay();
+			GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_12);
+		}
 	}
 }
