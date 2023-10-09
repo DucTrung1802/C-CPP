@@ -89,18 +89,46 @@ void GPIO_Init(GPIO_Handler_t *pGPIOHandler)
 		// Non-interrupt mode
 		temp = (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode
 				<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+		pGPIOHandler->pGPIOx->MODER &= ~(0x03
+				<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+		pGPIOHandler->pGPIOx->MODER |= temp;
 	}
 	else
 	{
 		// Interrupt mode
 	}
 	// 2. Configure the speed
+	temp = (pGPIOHandler->GPIO_PinConfig.GPIO_PinSpeed
+			<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandler->pGPIOx->OSPEEDR &= ~(0x03
+			<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandler->pGPIOx->OSPEEDR |= temp;
 
 	// 3. Configure the PU/PD setting
+	temp = (pGPIOHandler->GPIO_PinConfig.GPIO_PinPuPdControl
+			<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandler->pGPIOx->PUPDR &= ~(0x03
+			<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandler->pGPIOx->PUPDR |= temp;
 
 	// 4. Configure the output type
+	temp = (pGPIOHandler->GPIO_PinConfig.GPIO_PinOPType
+			<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandler->pGPIOx->OTYPER &= ~(0x03
+			<< (2 * pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber));
+	pGPIOHandler->pGPIOx->OTYPER |= temp;
 
-	// 5. Configure the alternative function
+	// 5. Configure the alternative functionw
+	if (pGPIOHandler->GPIO_PinConfig.GPIO_PinAltFuncMode == GPIO_MODE_ALT_FUNC)
+	{
+		uint8_t temp1, temp2;
+		temp1 = pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber / 8;
+		temp2 = pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber % 8;
+		pGPIOHandler->pGPIOx->AFR[temp1] &= ~(0x0F << (4 * temp2));
+		pGPIOHandler->pGPIOx->AFR[temp1] |=
+				pGPIOHandler->GPIO_PinConfig.GPIO_PinAltFuncMode << (4 * temp2);
+	}
+
 }
 
 void GPIO_DeInit(GPIO_RegDef_t *pGPIOx);
