@@ -31,7 +31,7 @@ typedef struct
  * GPIO pin possible modes
  */
 #define GPIO_MODE_INPUT		0		/* Input */
-#define GPIO_MODE_OUT		1		/* Output */
+#define GPIO_MODE_OUTPUT	1		/* Output */
 #define GPIO_MODE_ALT_FUNC 	2		/* Alternative function */
 #define GPIO_MODE_ANALOG	3		/* Analog mode */
 #define GPIO_MODE_IT_FE		4		/* Interrupt - falling edge */
