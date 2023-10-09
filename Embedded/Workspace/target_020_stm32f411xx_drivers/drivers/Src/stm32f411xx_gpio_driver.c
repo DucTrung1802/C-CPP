@@ -183,15 +183,55 @@ uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 	return value;
 }
 
+/**
+ * @fn uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t*)
+ * @brief	Read data from the given GPIO port
+ *
+ * @param pGPIOx	The given GPIO port	(A/B/C/D/E/H)
+ * @return
+ */
 uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx)
 {
 	return (uint16_t) pGPIOx->IDR;
 }
 
+/**
+ * @fn void GPIO_WriteToOutputPin(GPIO_RegDef_t*, uint8_t, uint8_t)
+ * @brief	Write data from the given GPIO pin
+ *
+ * @param pGPIOx		The given GPIO port	(A/B/C/D/E/H)
+ * @param PinNumber		The given GPIO pin
+ * @param Value			LOW/HIGH
+ */
 void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber,
-		uint8_t Value);
-void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value);
-void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
+		uint8_t Value)
+{
+	if (Value == GPIO_PIN_SET)
+	{
+		pGPIOx->ODR |= (1 << PinNumber);
+	}
+	else
+	{
+		pGPIOx->ODR &= ~(1 << PinNumber);
+	}
+}
+
+/**
+ * @fn void GPIO_WriteToOutputPort(GPIO_RegDef_t*, uint16_t)
+ * @brief	Write data from the given GPIO port
+ *
+ * @param pGPIOx	The given GPIO port	(A/B/C/D/E/H)
+ * @param Value		The desired value to be written
+ */
+void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t Value)
+{
+	pGPIOx->ODR = Value;
+}
+
+void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
+{
+	pGPIOx->ODR ^= (1 << PinNumber);
+}
 
 /*
  * IRQ Configuration and Handler
