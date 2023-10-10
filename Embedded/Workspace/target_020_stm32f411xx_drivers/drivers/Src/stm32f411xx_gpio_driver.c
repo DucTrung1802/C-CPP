@@ -289,7 +289,7 @@ void GPIO_IRQ_IT_Config(uint8_t IRQNumber, uint8_t EnorDi)
 		else if (IRQNumber >= 64 && IRQNumber < 96)
 		{
 			// Program ISER2 register
-			*NVIC_ISER2 |= (1 << (IRQNumber % 32));
+			*NVIC_ISER2 |= (1 << (IRQNumber % 64));
 		}
 	}
 	else
@@ -307,7 +307,7 @@ void GPIO_IRQ_IT_Config(uint8_t IRQNumber, uint8_t EnorDi)
 		else if (IRQNumber >= 64 && IRQNumber < 96)
 		{
 			// Program ICER2 register
-			*NVIC_ICER2 |= (1 << (IRQNumber % 32));
+			*NVIC_ICER2 |= (1 << (IRQNumber % 64));
 		}
 	}
 }
@@ -318,7 +318,7 @@ void GPIO_IRQ_IT_Config(uint8_t IRQNumber, uint8_t EnorDi)
  *
  * @param IRQPriority	the given IRQ priority number
  */
-void GPIO_IRQ_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority)
+void GPIO_IRQ_Priority_Config(uint8_t IRQNumber, uint32_t IRQPriority)
 {
 	// 1. Find the IP register and section
 	uint8_t iprx = IRQNumber / 4;

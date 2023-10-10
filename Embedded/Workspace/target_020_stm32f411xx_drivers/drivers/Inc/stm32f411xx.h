@@ -178,10 +178,11 @@ typedef struct
  */
 typedef struct
 {
-	__vo uint32_t MEMRMP; /* 	SYSCFG memory remap register								Offset: 0x00 */
-	__vo uint32_t PMC; /* 		SYSCFG peripheral mode configuration register 				Offset: 0x04 */
-	__vo uint32_t EXTICR[4]; /* SYSCFG external interrupt configuration register (1 - 4)	Offset: 0x08 - 0x14 */
-	__vo uint32_t CMPCR; /* 	Compensation cell control register 							Offset: 0x20 */
+	__vo uint32_t MEMRMP; /* 		SYSCFG memory remap register								Offset: 0x00 */
+	__vo uint32_t PMC; /* 			SYSCFG peripheral mode configuration register 				Offset: 0x04 */
+	__vo uint32_t EXTICR[4]; /* 	SYSCFG external interrupt configuration register (1 - 4)	Offset: 0x08 - 0x14 */
+	__vo uint32_t RESERVED[2];/*	Reserved 													Offset: 0x18 - 0x1C */
+	__vo uint32_t CMPCR; /* 		Compensation cell control register 							Offset: 0x20 */
 } SYSCFG_RegDef_t;
 
 /*
