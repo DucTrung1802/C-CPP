@@ -31,7 +31,8 @@ void delay(void)
 
 int main(void)
 {
-	GPIO_Handler_t GPIO_led_h;
+	GPIO_Handler_t GPIO_led_h =
+	{ 0 };
 	GPIO_led_h.pGPIOx = GPIOD;
 	GPIO_led_h.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_12;
 	GPIO_led_h.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_OUTPUT;
@@ -42,28 +43,30 @@ int main(void)
 	GPIO_PeriClockControl(GPIOD, ENABLE);
 	GPIO_Init(&GPIO_led_h);
 
-	GPIO_Handler_t GPIO_button_h;
+	GPIO_Handler_t GPIO_button_h =
+	{ 0 };
 	GPIO_button_h.pGPIOx = GPIOA;
 	GPIO_button_h.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
-	GPIO_button_h.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_FE;
+	GPIO_button_h.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_RE;
 	GPIO_button_h.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
-	GPIO_button_h.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_PULL_UP;
+	GPIO_button_h.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PULL;
 
 	GPIO_PeriClockControl(GPIOA, ENABLE);
 	GPIO_Init(&GPIO_button_h);
 
-	GPIO_IRQ_Priority_Config(IRQ_EXTI15_10, NVIC_IRQ_PRIO15);
-	GPIO_IRQ_IT_Config(IRQ_EXTI15_10, ENABLE);
+	// IRQ Configuration
+	GPIO_IRQ_Priority_Config(IRQ_EXTI0, NVIC_IRQ_PRIO15);
+	GPIO_IRQ_IT_Config(IRQ_EXTI0, ENABLE);
 	/* Loop forever */
 	while (1)
 	{
-
 	}
 }
 
-void EXTI15_10_IRQHandler()
+void EXTI0_IRQHandler()
 {
+	delay();
 	// Handle the interrupt
-	GPIO_IRQHandler(GPIO_PIN_NO_12);
+	GPIO_IRQHandler(GPIO_PIN_NO_0);
 	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_12);
 }
