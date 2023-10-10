@@ -13,7 +13,7 @@
  */
 void GPIO_PeriClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi)
 {
-	if (EnorDi)
+	if (EnorDi == ENABLE)
 	{
 		if (pGPIOx == GPIOA)
 		{
@@ -265,5 +265,49 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
 /*
  * IRQ Configuration and Handler
  */
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi);
-void GPIO_IRQHandler(uint8_t PinNumber);
+/**
+ * @fn void GPIO_IRQConfig(uint8_t, uint8_t, uint8_t)
+ * @brief	Configure IRQ for GPIO (processor side)
+ *
+ * @param IRQNumber		IRQ number
+ * @param IRQPriority	IRQ priority
+ * @param EnorDi		Macro 'ENABLE' or 'DISABLE'
+ */
+void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi)
+{
+	if (EnorDi == ENABLE)
+	{
+		if (IRQNumber < 32)
+		{
+			// Program ISER0 register
+		}
+		else if (IRQNumber >= 32 && IRQNumber < 64)
+		{
+			// Program ISER1 register
+		}
+		else if (IRQNumber >= 64 && IRQNumber < 96)
+		{
+			// Program ISER2 register
+		}
+	}
+	else
+	{
+		if (IRQNumber < 32)
+		{
+			// Program ISER0 register
+		}
+		else if (IRQNumber >= 32 && IRQNumber < 64)
+		{
+			// Program ISER1 register
+		}
+		else if (IRQNumber >= 64 && IRQNumber < 96)
+		{
+			// Program ISER2 register
+		}
+	}
+}
+
+void GPIO_IRQHandler(uint8_t PinNumber)
+{
+
+}

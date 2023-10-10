@@ -6,6 +6,13 @@
 #define __vo volatile
 
 /*
+ * **************************** START: Processor Specific Details ***************************
+ *
+ * AMR Cortex Mx Processor NVIC ISERx register addresses
+ */
+#define NVIC_ISER0						(0xE000E100UL)
+
+/*
  * Base addresses of FLASH and SAM memories
  * */
 #define FLASH_BASE_ADDR					(0x08000000UL)
