@@ -52,8 +52,8 @@ int main(void)
 	GPIO_PeriClockControl(GPIOA, ENABLE);
 	GPIO_Init(&GPIO_button_h);
 
-	GPIO_IRQ_Priority_Config(IRQ_EXTI0, NVIC_IRQ_PRIO15);
-	GPIO_IRQ_IT_Config(IRQ_EXTI0, ENABLE);
+	GPIO_IRQ_Priority_Config(IRQ_EXTI15_10, NVIC_IRQ_PRIO15);
+	GPIO_IRQ_IT_Config(IRQ_EXTI15_10, ENABLE);
 	/* Loop forever */
 	while (1)
 	{
@@ -61,9 +61,9 @@ int main(void)
 	}
 }
 
-void EXTI0_IRQHandler()
+void EXTI15_10_IRQHandler()
 {
 	// Handle the interrupt
-	GPIO_IRQHandler(GPIO_PIN_NO_0);
+	GPIO_IRQHandler(GPIO_PIN_NO_12);
 	GPIO_ToggleOutputPin(GPIOD, GPIO_PIN_NO_12);
 }
