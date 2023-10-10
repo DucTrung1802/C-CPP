@@ -270,41 +270,61 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber)
  * @brief	Configure IRQ for GPIO (processor side)
  *
  * @param IRQNumber		IRQ number
- * @param IRQPriority	IRQ priority
  * @param EnorDi		Macro 'ENABLE' or 'DISABLE'
  */
-void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t EnorDi)
+void GPIO_IRQ_IT_Config(uint8_t IRQNumber, uint8_t EnorDi)
 {
 	if (EnorDi == ENABLE)
 	{
 		if (IRQNumber < 32)
 		{
 			// Program ISER0 register
+			*NVIC_ISER0 |= (1 << IRQNumber);
 		}
 		else if (IRQNumber >= 32 && IRQNumber < 64)
 		{
 			// Program ISER1 register
+			*NVIC_ISER1 |= (1 << (IRQNumber % 32));
 		}
 		else if (IRQNumber >= 64 && IRQNumber < 96)
 		{
 			// Program ISER2 register
+			*NVIC_ISER2 |= (1 << (IRQNumber % 32));
 		}
 	}
 	else
 	{
 		if (IRQNumber < 32)
 		{
-			// Program ISER0 register
+			// Program ICER0 register
+			*NVIC_ICER0 |= (1 << IRQNumber);
 		}
 		else if (IRQNumber >= 32 && IRQNumber < 64)
 		{
-			// Program ISER1 register
+			// Program ICER1 register
+			*NVIC_ICER1 |= (1 << (IRQNumber % 32));
 		}
 		else if (IRQNumber >= 64 && IRQNumber < 96)
 		{
-			// Program ISER2 register
+			// Program ICER2 register
+			*NVIC_ICER2 |= (1 << (IRQNumber % 32));
 		}
 	}
+}
+
+/**
+ * @fn void GPIO_IRQ_Priority_Config(uint8_t)
+ * @brief	Setup IRQ priority with the given IRQ priority
+ *
+ * @param IRQPriority	the given IRQ priority number
+ */
+void GPIO_IRQ_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority)
+{
+	// 1. Find the IP register and section
+	uint8_t iprx = IRQNumber / 4;
+	uint8_t iprx_section = IRQNumber % 4;
+
+	(*NVIC_PR_BASE_ADDR + (iprx * 4)) |= (IRQPriority << (8 * iprx_section));
 }
 
 void GPIO_IRQHandler(uint8_t PinNumber)

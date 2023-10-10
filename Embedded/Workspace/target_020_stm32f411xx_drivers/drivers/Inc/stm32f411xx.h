@@ -10,7 +10,34 @@
  *
  * AMR Cortex Mx Processor NVIC ISERx register addresses
  */
-#define NVIC_ISER0						(0xE000E100UL)
+#define NVIC_ISER0			((__vo uint32_t*)0xE000E100)
+#define NVIC_ISER1			((__vo uint32_t*)0xE000E104)
+#define NVIC_ISER2			((__vo uint32_t*)0xE000E108)
+#define NVIC_ISER3			((__vo uint32_t*)0xE000E10C)
+
+#define NVIC_ICER0			((__vo uint32_t*)0XE000E180)
+#define NVIC_ICER1			((__vo uint32_t*)0XE000E184)
+#define NVIC_ICER2			((__vo uint32_t*)0XE000E188)
+#define NVIC_ICER3			((__vo uint32_t*)0XE000E18C)
+
+#define NVIC_ISPR0			((__vo uint32_t*)0XE000E200)
+#define NVIC_ISPR1			((__vo uint32_t*)0XE000E204)
+#define NVIC_ISPR2			((__vo uint32_t*)0XE000E208)
+#define NVIC_ISPR3			((__vo uint32_t*)0XE000E20C)
+
+#define NVIC_ICPR0			((__vo uint32_t*)0XE000E280)
+#define NVIC_ICPR1			((__vo uint32_t*)0XE000E284)
+#define NVIC_ICPR2			((__vo uint32_t*)0XE000E288)
+#define NVIC_ICPR3			((__vo uint32_t*)0XE000E28C)
+
+#define NVIC_IABR0			((__vo uint32_t*)0XE000E300)
+#define NVIC_IABR1			((__vo uint32_t*)0XE000E304)
+#define NVIC_IABR2			((__vo uint32_t*)0XE000E308)
+#define NVIC_IABR3			((__vo uint32_t*)0XE000E30C)
+
+#define NVIC_PR_BASE_ADDR	((__vo uint32_t*)0XE000E400)
+
+#define NVIC_STIR			((__vo uint32_t*)0xE000EF00)
 
 /*
  * Base addresses of FLASH and SAM memories
