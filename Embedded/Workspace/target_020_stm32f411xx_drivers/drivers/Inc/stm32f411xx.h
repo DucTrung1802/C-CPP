@@ -207,6 +207,7 @@ typedef struct
 typedef struct
 {
 	__vo uint32_t CR1;
+	__vo uint32_t CR2;
 	__vo uint32_t SR;
 	__vo uint32_t DR;
 	__vo uint32_t CRCPR;
@@ -231,6 +232,12 @@ typedef struct
 #define GPIOD					((GPIO_RegDef_t*)GPIOD_BASE_ADDR)
 #define GPIOE					((GPIO_RegDef_t*)GPIOE_BASE_ADDR)
 #define GPIOH					((GPIO_RegDef_t*)GPIOH_BASE_ADDR)
+
+#define SPI1					((SPI_RegDef_t*)SPI1_I2S1_BASE_ADDR)
+#define SPI2					((SPI_RegDef_t*)SPI2_I2S2_BASE_ADDR)
+#define SPI3					((SPI_RegDef_t*)SPI3_I2S3_BASE_ADDR)
+#define SPI4					((SPI_RegDef_t*)SPI4_I2S4_BASE_ADDR)
+#define SPI5					((SPI_RegDef_t*)SPI5_I2S5_BASE_ADDR)
 
 /*
  * ENABLE
@@ -397,6 +404,9 @@ typedef struct
 #define GPIO_PIN_SET	SET
 #define GPIO_PIN_RESET	RESET
 
+/*
+ * GPIO macros
+ */
 #define GPIO_PIN_NO_0   0
 #define GPIO_PIN_NO_1   1
 #define GPIO_PIN_NO_2   2
@@ -413,6 +423,46 @@ typedef struct
 #define GPIO_PIN_NO_13  13
 #define GPIO_PIN_NO_14  14
 #define GPIO_PIN_NO_15  15
+
+/*
+ * SPI macros
+ */
+
+// Bit position definitions SPI_CR1
+#define SPI_CR1_CPHA			0
+#define SPI_CR1_CPOL			1
+#define SPI_CR1_MSTR			2
+#define SPI_CR1_BR				3
+#define SPI_CR1_SPE				6
+#define SPI_CR1_LSB_FIRST		7
+#define SPI_CR1_SSI				8
+#define SPI_CR1_SSM				9
+#define SPI_CR1_RX_ONLY			10
+#define SPI_CR1_DFF				11
+#define SPI_CR1_CRC_NEXT		12
+#define SPI_CR1_CRC_EN			13
+#define SPI_CR1_BIDIOE			14
+#define SPI_CR1_BIDIMODE		15
+
+// Bit position definitions SPI_CR2
+#define SPI_CR2_RXDMAEN			0
+#define SPI_CR2_TXDMAEN			1
+#define SPI_CR2_SSOE			2
+#define SPI_CR2_FRF				4
+#define SPI_CR2_ERRIE			5
+#define SPI_CR2_RXNEIE			6
+#define SPI_CR2_TXEIE			7
+
+// Bit position definitions SPI_SR
+#define SPI_SR_RXNE				0
+#define SPI_SR_TXE				1
+#define SPI_SR_CHSIDE			2
+#define SPI_SR_UDR				3
+#define SPI_SR_CRC_ERR			4
+#define SPI_SR_MODF				5
+#define SPI_SR_OVR				6
+#define SPI_SR_BSY				7
+#define SPI_SR_FRE				8
 
 /*
  * Interrupt priorities
@@ -446,6 +496,10 @@ typedef struct
 
 #ifndef INC_STM32F411XX_GPIO_DRIVER_H_
 #include "stm32f411xx_gpio_driver.h"
+#endif
+
+#ifndef INC_STM32F411XX_SPI_DRIVER_H_
+#include "stm32f411xx_spi_driver.h"
 #endif
 
 #endif /* INC_STM32F411XX_H_ */
