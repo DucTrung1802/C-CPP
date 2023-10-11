@@ -202,6 +202,21 @@ typedef struct
 } GPIO_RegDef_t;
 
 /*
+ * Register definition structures for SPI
+ */
+typedef struct
+{
+	__vo uint32_t CR1;
+	__vo uint32_t SR;
+	__vo uint32_t DR;
+	__vo uint32_t CRCPR;
+	__vo uint32_t RXCRCR;
+	__vo uint32_t TXCRCR;
+	__vo uint32_t I2SCFGR;
+	__vo uint32_t I2SPR;
+} SPI_RegDef_t;
+
+/*
  * Peripheral definitions (Peripheral base addresses typecasted to xxx_RegDef_t)
  */
 #define RCC						((RCC_RegDef_t*)RCC_BASE_ADDR)
