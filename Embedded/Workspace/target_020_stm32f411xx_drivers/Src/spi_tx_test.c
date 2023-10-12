@@ -98,6 +98,9 @@ int main(void)
 
 	SPI_SendData(SPI2, (uint8_t*) user_data, strlen(user_data));
 
+	// Disable the SPI2 peripheral after transmitting
+	SPI_PeriControl(SPI2, DISABLE);
+
 	while (1)
 		;
 }
