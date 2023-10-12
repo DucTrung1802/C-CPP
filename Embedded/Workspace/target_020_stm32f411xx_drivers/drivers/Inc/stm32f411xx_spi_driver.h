@@ -96,10 +96,6 @@ typedef struct
 void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 
 /*
- * SPI Control APIs
- */
-
-/*
  * Init and DeInit
  */
 void SPI_Init(SPI_Handler_t *pSPIHandler);
@@ -117,5 +113,11 @@ void SPI_ReceiveData(SPI_RegDef_t *pSPIx);
 void SPI_IRQInterruptConfig(uint8_t IRQNumber, uint8_t EnorDi);
 void SPI_IRQPriorityConfig(uint8_t IRQNumber, uint32_t IRQPriority);
 void SPI_IRQHandler(SPI_Handler_t *pHandler);
+
+/*
+ * Other Peripheral Control APIs
+ */
+void SPI_PeriControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 
 #endif /* INC_STM32F411XX_SPI_DRIVER_H_ */

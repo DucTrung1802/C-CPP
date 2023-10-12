@@ -54,21 +54,6 @@ void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
 }
 
 /*
- * SPI Control APIs
- */
-void SPI_PeriControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
-{
-	if (EnorDi == ENABLE)
-	{
-		pSPIx->CR1 |= (1 << SPI_CR1_SPE);
-	}
-	else
-	{
-		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
-	}
-}
-
-/*
  * Init and DeInit
  */
 void SPI_Init(SPI_Handler_t *pSPIHandler)
@@ -116,6 +101,8 @@ void SPI_Init(SPI_Handler_t *pSPIHandler)
 
 	// 5.Configure the CPHA
 	temp_reg |= pSPIHandler->SPIConfig.SPI_CPHA << SPI_CR1_CPHA;
+
+	temp_reg |= pSPIHandler->SPIConfig.SPI_SSM << SPI_CR1_SSM;
 
 	pSPIHandler->pSPIx->CR1 = temp_reg;
 }
@@ -175,7 +162,7 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t len)
 		}
 		else
 		{
-			pSPIx->DR = *((uint8_t*) pTxBuffer);
+			pSPIx->DR = *pTxBuffer;
 			len--;
 			(uint8_t*) pTxBuffer++;
 		}
@@ -205,3 +192,29 @@ void SPI_IRQHandler(SPI_Handler_t *pHandler)
 
 }
 
+/*
+ * Other Peripheral Control APIs
+ */
+void SPI_PeriControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
+{
+	if (EnorDi == ENABLE)
+	{
+		pSPIx->CR1 |= (1 << SPI_CR1_SPE);
+	}
+	else
+	{
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SPE);
+	}
+}
+
+void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi)
+{
+	if (EnorDi == ENABLE)
+	{
+		pSPIx->CR1 |= (1 << SPI_CR1_SSI);
+	}
+	else
+	{
+		pSPIx->CR1 &= ~(1 << SPI_CR1_SSI);
+	}
+}

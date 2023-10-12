@@ -151,7 +151,7 @@ void GPIO_Init(GPIO_Handler_t *pGPIOHandler)
 	pGPIOHandler->pGPIOx->OTYPER |= temp;
 
 	// 5. Configure the alternative functionw
-	if (pGPIOHandler->GPIO_PinConfig.GPIO_PinAltFuncMode == GPIO_MODE_ALT_FUNC)
+	if (pGPIOHandler->GPIO_PinConfig.GPIO_PinMode == GPIO_MODE_ALT_FUNC)
 	{
 		uint8_t temp1, temp2;
 		temp1 = pGPIOHandler->GPIO_PinConfig.GPIO_PinNumber / 8;
