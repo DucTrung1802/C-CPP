@@ -79,6 +79,18 @@ typedef struct
 #define SPI_SSM_SWM			1
 
 /*
+ * SPI related status flags definitions
+ */
+#define SPI_RXNE_FLAG		(1 << SPI_SR_RXNE)
+#define SPI_TXE_FLAG		(1 << SPI_SR_TXE)
+#define SPI_CHSIDE_FLAG		(1 << SPI_SR_CHSIDE)
+#define SPI_CRC_ERR_FLAG	(1 << SPI_SR_CRC_ERR)
+#define SPI_MODF_FLAG		(1 << SPI_SR_MODF)
+#define SPI_OVR_FLAG		(1 << SPI_SR_OVR)
+#define SPI_BUSY_FLAG		(1 << SPI_SR_BSY)
+#define SPI_FRE_FLAG		(1 << SPI_SR_FRE)
+
+/*
  * Peripheral Clock Setup
  */
 void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
