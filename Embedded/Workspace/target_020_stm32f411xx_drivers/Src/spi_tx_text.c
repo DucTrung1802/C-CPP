@@ -17,6 +17,7 @@
  */
 
 #include <stdint.h>
+#include <string.h>
 #include "stm32f411xx.h"
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
@@ -29,15 +30,66 @@ void delay(void)
 		;
 }
 
-int main(void)
+/*
+ * SPI2 pins
+ * NSS		PB12		AF05
+ * SCLK		PB13		AF05
+ * MISO		PB14		AF05
+ * MOSI		PB15		AF05
+ */
+
+void SPI2_GPIOInits(void)
 {
+	GPIO_Handler_t SPIpins;
+	SPIpins.pGPIOx = GPIOB;
+	SPIpins.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_ALT_FUNC;
+	SPIpins.GPIO_PinConfig.GPIO_PinAltFuncMode = 5;
+	SPIpins.GPIO_PinConfig.GPIO_PinOPType = GPIO_OP_TYPE_PP;
+	SPIpins.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PULL;
+	SPIpins.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
+
+	// SCLK
+	SPIpins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_13;
+	GPIO_Init(&SPIpins);
+
+	// MOSI
+	SPIpins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_15;
+	GPIO_Init(&SPIpins);
+
+//	// MISO
+//	SPIpins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_14;
+//	GPIO_Init(&SPIpins);
+//
+//	// NSS
+//	SPIpins.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_12;
+//	GPIO_Init(&SPIpins);
+
+}
+
+void SPI2_Init()
+{
+
 	SPI_Handler_t SPI_send_tx_h;
 	SPI_send_tx_h.pSPIx = SPI2;
 	SPI_send_tx_h.SPIConfig.SPI_DeviceMode = SPI_DEVICE_MODE_MASTER;
 	SPI_send_tx_h.SPIConfig.SPI_BusConfig = SPI_BUS_CONFIG_FULL_DUPLEX;
 	SPI_send_tx_h.SPIConfig.SPI_SclkSpeed = SPI_SCLK_SPEED_DIV2;
 	SPI_send_tx_h.SPIConfig.SPI_DFF = SPI_DFF_8BITS;
+	SPI_send_tx_h.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
+	SPI_send_tx_h.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
+	SPI_send_tx_h.SPIConfig.SPI_SSM = SPI_SSM_SWM;
 
-	SPI_PeriClockControl(SPI2, ENABLE);
 	SPI_Init(&SPI_send_tx_h);
+}
+
+int main(void)
+{
+	char user_data[] = "Hello world";
+	// This function is used to initialize the GPIO pins to behave as SPI2 pins
+	SPI2_GPIOInits();
+
+	// This function is used to initialize the SPI2 peripheral parameters
+	SPI2_Init();
+
+	SPI_SendData(SPI2, (uint8_t*) user_data, strlen(user_data));
 }

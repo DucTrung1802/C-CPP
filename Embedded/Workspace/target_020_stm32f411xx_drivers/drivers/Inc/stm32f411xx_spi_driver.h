@@ -96,6 +96,10 @@ typedef struct
 void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 
 /*
+ * SPI Control APIs
+ */
+
+/*
  * Init and DeInit
  */
 void SPI_Init(SPI_Handler_t *pSPIHandler);
