@@ -75,8 +75,8 @@ typedef struct
  * @SPI_SSM
  * Software slave management
  */
-#define SPI_SSM_HWM			0
-#define SPI_SSM_SWM			1
+#define SPI_SSM_HWM			0  	/* Software slave management */
+#define SPI_SSM_SWM			1	/* Hardware slave management */
 
 /*
  * SPI related status flags definitions
@@ -100,6 +100,7 @@ void SPI_PeriClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
  */
 void SPI_Init(SPI_Handler_t *pSPIHandler);
 void SPI_DeInit(SPI_RegDef_t *pSPIx);
+uint8_t SPI_GetFlagStatus(SPI_RegDef_t *pSPIx, uint32_t FlagName);
 
 /*
  * Data Send and Receive
@@ -119,5 +120,6 @@ void SPI_IRQHandler(SPI_Handler_t *pHandler);
  */
 void SPI_PeriControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 void SPI_SSIConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
 
 #endif /* INC_STM32F411XX_SPI_DRIVER_H_ */
