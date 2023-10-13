@@ -24,8 +24,6 @@
 #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
 #endif
 
-volatile uint8_t send_data = 0;
-
 void delay(void)
 {
 	for (int i = 0; i < 300000; i++)
@@ -73,7 +71,7 @@ void GPIO_ButtonInit()
 	{ 0 };
 	GPIO_button_h.pGPIOx = GPIOA;
 	GPIO_button_h.GPIO_PinConfig.GPIO_PinNumber = GPIO_PIN_NO_0;
-	GPIO_button_h.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_IT_RE;
+	GPIO_button_h.GPIO_PinConfig.GPIO_PinMode = GPIO_MODE_INPUT;
 	GPIO_button_h.GPIO_PinConfig.GPIO_PinSpeed = GPIO_SPEED_FAST;
 	GPIO_button_h.GPIO_PinConfig.GPIO_PinPuPdControl = GPIO_NO_PULL;
 
@@ -90,7 +88,7 @@ void SPI2_Init()
 	SPI_send_tx_h.pSPIx = SPI2;
 	SPI_send_tx_h.SPIConfig.SPI_DeviceMode = SPI_DEVICE_MODE_MASTER;
 	SPI_send_tx_h.SPIConfig.SPI_BusConfig = SPI_BUS_CONFIG_FULL_DUPLEX;
-	SPI_send_tx_h.SPIConfig.SPI_SclkSpeed = SPI_SCLK_SPEED_DIV8; /* Generate sclk of 2 MHz */
+	SPI_send_tx_h.SPIConfig.SPI_SclkSpeed = SPI_SCLK_SPEED_DIV64; /* Generate sclk of 2 MHz */
 	SPI_send_tx_h.SPIConfig.SPI_DFF = SPI_DFF_8BITS;
 	SPI_send_tx_h.SPIConfig.SPI_CPOL = SPI_CPOL_LOW;
 	SPI_send_tx_h.SPIConfig.SPI_CPHA = SPI_CPHA_LOW;
@@ -101,7 +99,7 @@ void SPI2_Init()
 
 int main(void)
 {
-	char user_data[] = "Hello world";
+	char user_data[] = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur tincidunt rhoncus urna ac nullam.";
 	// This function is used to initialize the GPIO pins to behave as SPI2 pins
 	SPI2_GPIOInits();
 
@@ -120,32 +118,30 @@ int main(void)
 
 	while (1)
 	{
-		if (send_data)
-		{
-			// Enable the SPI2 peripheral
-			SPI_PeriControl(SPI2, ENABLE);
+		while (!GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_NO_0))
+			;
 
-			uint8_t data_len = strlen(user_data);
+		delay();
+		// Enable the SPI2 peripheral
+		SPI_PeriControl(SPI2, ENABLE);
 
-			SPI_SendData(SPI2, &data_len, 1);
+		uint16_t data_len = strlen(user_data);
 
-			SPI_SendData(SPI2, (uint8_t*) user_data, strlen(user_data));
+		uint16_t data_len_msb = (data_len >> 8) & 0xFF;
 
-			while (SPI_GetFlagStatus(SPI2, SPI_BUSY_FLAG))
-				;
+		uint16_t data_len_lsb = data_len & 0xFF;
 
-			// Disable the SPI2 peripheral after transmitting
-			SPI_PeriControl(SPI2, DISABLE);
+		SPI_SendData(SPI2, &data_len_msb, 1);
 
-			send_data = 0;
-		}
+		SPI_SendData(SPI2, &data_len_lsb, 1);
+
+		SPI_SendData(SPI2, (uint8_t*) user_data, strlen(user_data));
+
+		while (SPI_GetFlagStatus(SPI2, SPI_BUSY_FLAG))
+			;
+
+		// Disable the SPI2 peripheral after transmitting
+		SPI_PeriControl(SPI2, DISABLE);
+
 	}
-}
-
-void EXTI0_IRQHandler()
-{
-	delay();
-	GPIO_IRQHandler(GPIO_PIN_NO_0);
-	// ISR
-	send_data = 1;
 }
