@@ -21,55 +21,41 @@ void printArray(int array[], int n)
     std::cout << std::endl;
 }
 
-void heapify(int arr[], int size, int root)
+void heapify(int array[], int size, int root)
 {
-
-    // Initialize largest as root
     int largest = root;
+    int left = root * 2 + 1;
+    int right = root * 2 + 2;
 
-    // left = 2*i + 1
-    int left = 2 * root + 1;
-
-    // right = 2*i + 2
-    int right = 2 * root + 2;
-
-    // If left child is larger than root
-    if (left < size && arr[left] > arr[largest])
+    if (left < size && array[left] > array[largest])
+    {
         largest = left;
-
-    // If right child is larger than largest
-    // so far
-    if (right < size && arr[right] > arr[largest])
+    }
+    if (right < size && array[right] > array[largest])
+    {
         largest = right;
-
-    // If largest is not root
+    }
     if (largest != root)
     {
-        swap(arr[root], arr[largest]);
+        swap(array[largest], array[root]);
 
-        // Recursively heapify the affected
-        // sub-tree
-        heapify(arr, size, largest);
+        heapify(array, size, largest);
     }
 }
 
-void heapSort(int arr[], int size)
+void heapSort(int array[], int size)
 {
 
-    // Build heap (rearrange array)
     for (int i = size / 2 - 1; i >= 0; i--)
-        heapify(arr, size, i);
-
-    // One by one extract an element
-    // from heap
-    for (int i = size - 1; i > 0; i--)
     {
+        heapify(array, size, i);
+    }
 
-        // Move current root to end
-        swap(arr[0], arr[i]);
+    for (int i = size - 1; i >= 0; i--)
+    {
+        swap(array[0], array[i]);
 
-        // call max heapify on the reduced heap
-        heapify(arr, i, 0);
+        heapify(array, i, 0);
     }
 }
 
