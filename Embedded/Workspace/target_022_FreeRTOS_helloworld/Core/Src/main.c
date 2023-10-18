@@ -45,6 +45,8 @@
 
 /* USER CODE BEGIN PV */
 
+#define DWT_CTRL		(*(volatile uint32_t*) 0xE0001000UL)
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -92,6 +94,13 @@ int main(void)
 
 	/* Initialize all configured peripherals */
 	/* USER CODE BEGIN 2 */
+
+	// Enable the CYCCNT counter (before Task Creation)
+	DWT_CTRL |= (1 << 0);
+
+	SEGGER_SYSVIEW_Conf();
+
+	SEGGER_SYSVIEW_Start();
 
 	status = xTaskCreate(Task1_Function, "Task1", 200,
 			"Hello world from task 1\n", 2, &Task1_Handler);
@@ -175,7 +184,7 @@ static void Task1_Function(void *parameters)
 	while (1)
 	{
 		printf("%s\n", (char*) parameters);
-		taskYIELD();
+//		taskYIELD();
 	}
 }
 
@@ -185,7 +194,7 @@ static void Task2_Function(void *parameters)
 	while (1)
 	{
 		printf("%s\n", (char*) parameters);
-		taskYIELD();
+//		taskYIELD();
 	}
 }
 
