@@ -175,6 +175,7 @@ static void Task1_Function(void *parameters)
 	while (1)
 	{
 		printf("%s\n", (char*) parameters);
+		taskYIELD();
 	}
 }
 
@@ -184,6 +185,7 @@ static void Task2_Function(void *parameters)
 	while (1)
 	{
 		printf("%s\n", (char*) parameters);
+		taskYIELD();
 	}
 }
 
