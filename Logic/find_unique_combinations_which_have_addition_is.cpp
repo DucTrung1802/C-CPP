@@ -7,10 +7,10 @@
 #include <iostream>
 #include <vector>
 
-#define TARGET 8
+#define TARGET 10
 #define COMBINATION 3
 
-void FindCombinationsHaveSum(std::vector<int> array, std::vector<int> &current, int target)
+void FindUniqueCombinationsHaveSum(std::vector<int> array, std::vector<int> &current, int target, int start)
 {
     if (current.size() == COMBINATION && target == 0)
     {
@@ -25,13 +25,13 @@ void FindCombinationsHaveSum(std::vector<int> array, std::vector<int> &current, 
     {
         std::vector<int> tempVector = array;
 
-        for (int i = 0; i < array.size(); i++)
+        for (int i = start; i < array.size(); i++)
         {
             array = tempVector;
             int element = array[i];
             current.push_back(element);
             array.erase(array.begin() + i);
-            FindCombinationsHaveSum(array, current, target - element);
+            FindUniqueCombinationsHaveSum(array, current, target - element, i);
             current.pop_back();
         }
     }
@@ -43,7 +43,7 @@ int main()
 
     std::vector<int> current;
 
-    FindCombinationsHaveSum(array, current, TARGET);
+    FindUniqueCombinationsHaveSum(array, current, TARGET, 0);
 
     return 0;
 }
