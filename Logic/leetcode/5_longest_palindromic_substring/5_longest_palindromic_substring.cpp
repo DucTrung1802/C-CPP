@@ -13,46 +13,64 @@ class Solution
 public:
     string longestPalindrome(string s)
     {
-        int length = s.size();
+        if (s.empty())
+        {
+            return "";
+        }
 
-        if (length == 1)
+        if (s.size() == 1)
         {
             return s;
         }
 
-        int index = 0;
-        int longest_length = 0;
-        int reverse_index;
-        string temp;
-        for (int i = 0; i < length; i++)
+        int pivot = 0;
+        int max_length = 1;
+        int length = s.size();
+        bool fail = false;
+        int left, right, i, j;
+
+        for (left = 0; left < length; left++)
         {
-            reverse_index = s.find_last_of(s[i]);
-            if (i != reverse_index)
+            if (length - left <= max_length)
             {
-                temp = s;
-                reverse(s.begin() + i, s.begin() + reverse_index + 1);
-                if (temp == s)
+                break;
+            }
+
+            for (right = length - 1; right > left; right--)
+            {
+                int sub_length = right - left + 1;
+                fail = false;
+
+                int half = left + sub_length / 2;
+                for (i = left, j = 0; i < half; i++, j++)
                 {
-                    index = i;
-                    longest_length = reverse_index - i + 1;
-                    i = reverse_index + 1;
+                    if (s[i] != s[right - j])
+                    {
+                        fail = true;
+                        break;
+                    }
+                }
+
+                if (!fail && sub_length > max_length)
+                {
+                    pivot = left;
+                    max_length = sub_length;
+                    break;
                 }
             }
         }
 
-        if (longest_length)
-        {
-            return s.substr(index, longest_length);
-        }
-
-        return "";
+        return s.substr(pivot, max_length);
     }
 };
 
 int main()
 {
     Solution solution;
-    string string_1 = "xzyabbcbbakl";
+    // string string_1 = "xzyabcdcbakl";
+    // string string_1 = "aacabdkacaa";
+    // string string_1 = "ababa";
+    string string_1 = "babadada";
     string result = solution.longestPalindrome(string_1);
     cout << result << endl;
     return 0;
