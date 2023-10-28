@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -13,50 +13,51 @@ class Solution
 public:
     string convert(string s, int numRows)
     {
-        unordered_map<int, int> umap;
+        if (s.empty() || numRows <= 1 || numRows > s.size())
+        {
+            return s;
+        }
 
+        vector<string> list_string(numRows);
+
+        int j = 0;
+        bool going_down = true;
         for (int i = 0; i < s.size(); i++)
         {
-            if (i % ((numRows - 1) * 2) == 0)
+            list_string[j].append(s.substr(i, 1));
+
+            if (j == 0)
             {
-                umap[0]++;
+                going_down = true;
             }
-            else if (i % (numRows - 1) == 0)
+            else if (j == numRows - 1)
             {
-                umap[(numRows - 1)]++;
+                going_down = false;
             }
-            else if (i % ((numRows - 1) * 2) > (numRows - 1))
+
+            if (going_down)
             {
-                umap[(i - (numRows - 1)) % (numRows - 1)]++;
+                j++;
             }
             else
             {
-                umap[(i % (numRows - 1))]++;
+                j--;
             }
         }
 
-        string result;
-        int index = 0;
-        int count = 0;
-        while (index < numRows)
+        for (int i = 1; i < numRows; i++)
         {
-            count = umap[index];
-            while (count > 0)
-            {
-                result.push_back(s[(umap[index] - count) * (numRows - 1) * 2 + index]);
-                count--;
-            }
-            index++;
+            list_string[0].append(list_string[i]);
         }
 
-        return result;
+        return list_string[0];
     }
 };
 
 int main()
 {
     Solution solution;
-    string result = solution.convert("ABCDEFG", 3);
+    string result = solution.convert("PAYPALISHIRING", 4);
     cout << result << endl;
     return 0;
 }
