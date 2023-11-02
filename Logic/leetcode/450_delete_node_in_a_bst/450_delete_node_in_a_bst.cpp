@@ -5,19 +5,7 @@
 using namespace std;
 
 /**
- * My own solution
- */
-
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
+ * Not my solution
  */
 
 struct TreeNode
@@ -58,10 +46,22 @@ TreeNode *createRandomSortedBinaryTree(int n)
 void printTree(TreeNode *root)
 {
     if (root == nullptr)
+    {
+        std::cout << "NULL"
+                  << " ";
         return;
+    }
+
+    if (!root->left && !root->right)
+    {
+        std::cout << root->val << " ";
+        return;
+    }
 
     printTree(root->left);
+
     std::cout << root->val << " ";
+
     printTree(root->right);
 }
 
@@ -74,20 +74,40 @@ public:
         {
             return root;
         }
-
-        if (root->left && root->left->val != key)
-        {
-            root->left = deleteNode(root->left, key);
-        }
-        else if (root->right && root->right->val != key)
+        if (root->val < key)
         {
             root->right = deleteNode(root->right, key);
         }
+        else if (root->val > key)
+        {
+            root->left = deleteNode(root->left, key);
+        }
+        else
+        {
+            if (root->left == nullptr)
+            {
+                TreeNode *temp = root->right;
+                delete root;
+                return temp;
+            }
+            else if (root->right == nullptr)
+            {
+                TreeNode *temp = root->left;
+                delete root;
+                return temp;
+            }
+
+            TreeNode *curr = root->right;
+            while (curr->left != nullptr)
+            {
+                curr = curr->left;
+            }
+            root->val = curr->val;
+            root->right = deleteNode(root->right, root->val);
+        }
+        return root;
     }
-    return root;
-}
-}
-;
+};
 
 int main()
 {
@@ -95,13 +115,18 @@ int main()
 
     Solution solution;
     int n = 20; // Number of nodes
-    TreeNode *root = createRandomSortedBinaryTree(n);
+    TreeNode *root = new TreeNode(5);
+    root->left = new TreeNode(3);
+    root->left->left = new TreeNode(2);
+    root->left->right = new TreeNode(4);
+    root->right = new TreeNode(6);
+    root->right->right = new TreeNode(7);
 
     std::cout << "Random Binary Tree with 20 nodes (In-order traversal):" << std::endl;
     printTree(root);
     std::cout << std::endl;
 
-    TreeNode *result = solution.deleteNode(root, 38);
+    TreeNode *result = solution.deleteNode(root, 3);
     std::cout << "Result: " << std::endl;
     printTree(result);
     std::cout << std::endl;
