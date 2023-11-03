@@ -185,6 +185,7 @@ static void Task1_Function(void *parameters)
 	{
 		printf("%s\n", (char*) parameters);
 //		taskYIELD();
+		taskYIELD();
 	}
 }
 
@@ -195,6 +196,7 @@ static void Task2_Function(void *parameters)
 	{
 		printf("%s\n", (char*) parameters);
 //		taskYIELD();
+		taskYIELD();
 	}
 }
 
