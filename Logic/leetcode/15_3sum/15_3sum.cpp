@@ -1,11 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <set>
 
 using namespace std;
 
 /**
- * My own solution
+ * Not my solution
  */
 
 class Solution
@@ -13,51 +14,83 @@ class Solution
 public:
     vector<vector<int>> threeSum(vector<int> &nums)
     {
-        sort(nums.begin(), nums.end());
-
-        vector<vector<int>> vect_list = {};
-        int length = nums.size();
-
-        for (int i = 0; i < length; i++)
+        if (nums.size() < 3)
+            return {};
+        if (all_of(nums.begin(), nums.end(), [&](const int i)
+                   { return i == 0; }))
         {
-            int left = i + 1;
-            int right = length - 1;
-            int target = 0 - nums[i];
-
-            if (i >= 1 && i == (i - 1))
+            return {{0, 0, 0}};
+        }
+        auto min = nums[0];
+        auto max = nums[0];
+        for (auto &i : nums)
+        {
+            min = std::min(i, min);
+            max = std::max(i, max);
+        }
+        size_t h = max - min + 1;
+        vector<int> store(h, 0);
+        for (auto &i : nums)
+        {
+            size_t j = i - min;
+            if (store[j] < 3)
             {
-                continue;
-            }
-
-            while (left < right)
-            {
-                while (left >= 1 && nums[left] == nums[left - 1])
-                {
-                    left++;
-                }
-
-                while (right < length - 1 && nums[right] == nums[right + 1])
-                {
-                    right--;
-                }
-
-                if (nums[left] + nums[right] == target)
-                {
-                    vect_list.push_back({nums[i], nums[left], nums[right]});
-                    left++;
-                }
-                else if (nums[left] + nums[right] < target)
-                {
-                    left++;
-                }
-                else
-                {
-                    right--;
-                }
+                ++store[j];
             }
         }
 
-        return vect_list;
+        int unique = 0;
+        for (int i = 0; i < h; i++)
+        {
+            if (store[i] != 0)
+            {
+                nums[unique++] = i + min;
+            }
+        }
+
+        vector<vector<int>> ans;
+        auto l = nums.begin();
+        auto r = next(nums.begin(), unique - 1);
+
+        if ((*l <= 0 && *r <= 0) || (*l >= 0 && *r >= 0))
+        {
+            return {};
+        }
+
+        while (*l <= 0)
+        {
+            while (*r >= 0)
+            {
+                int need = -(*l + *r);
+                int j = need - min;
+
+                if (need < *l)
+                {
+                    r--;
+                    continue;
+                }
+                if (need > *r)
+                {
+                    r--;
+                    continue;
+                }
+
+                if (((*l == need || *r == need) && store[j] == 1) ||
+                    ((*l == need && *r == need) && store[j] == 2))
+                {
+                    r--;
+                    continue;
+                }
+                if (store[j] != 0)
+                {
+                    ans.push_back({*l, need, *r});
+                }
+                r--;
+            }
+            l++;
+            r = next(nums.begin(), unique - 1);
+        }
+        return ans;
     }
 };
 
